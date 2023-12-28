@@ -1,7 +1,5 @@
-﻿using CefSharp;
-using CefSharp.WinForms;
+﻿using CefSharp.WinForms;
 using GhostCursor;
-using GhostCursor.Extensions;
 
 namespace Sandbox;
 
@@ -12,7 +10,7 @@ public class DefaultForm : Form
         Width = 800;
         Height = 600;
 
-        var cef = new ChromiumWebBrowser("https://www.google.com/?hl=en");
+        var cef = new ChromiumWebBrowser("browser://files/scroll.html");
         cef.Dock = DockStyle.Fill;
         Controls.Add(cef);
 
@@ -20,15 +18,18 @@ public class DefaultForm : Form
         {   
             await cef.WaitForInitialLoadAsync();
 
-            await Task.Delay(2000);
-
             var cursor = cef.CreateCursor(debug: true);
 
             await using (await cursor.StartAsync())
             {
-                await cursor.ClickAsync(CefElement.FromXPath("//div[text() = 'Reject all']"));
-                await cursor.ClickAsync(CefElement.FromSelector("[title='Search']"));
-                await cursor.TypeAsync("Hello world");
+                await cursor.ClickAsync(CefElement.FromSelector("#input-a"));
+                await cursor.TypeAsync("Input A");
+
+                await cursor.ClickAsync(CefElement.FromSelector("#input-c"));
+                await cursor.TypeAsync("Input C");
+
+                await cursor.ClickAsync(CefElement.FromSelector("#input-b"));
+                await cursor.TypeAsync("Input B");
             }
         });
     }

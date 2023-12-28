@@ -1,5 +1,9 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
+using HttpStack;
+using HttpStack.CefSharp;
+using HttpStack.StaticFiles;
+using Microsoft.Extensions.FileProviders;
 
 namespace Sandbox;
 
@@ -17,6 +21,28 @@ static class Program
 			LogFile = "Debug.log", //You can customise this path
 			LogSeverity = LogSeverity.Default // You can change the log level
 		};
+
+		var app = new HttpStackBuilder();
+		var provider = new EmbeddedFileProvider(typeof(DefaultForm).Assembly, "Sandbox.wwwroot");
+
+		app.UseStaticFiles(provider);
+
+		app.Run(async context =>
+		{
+			await context.Response.WriteAsync($"Invalid request {context.Request.Path}. Available routes:");
+
+			foreach (var content in provider.GetDirectoryContents("/"))
+			{
+				await context.Response.WriteAsync("\n" + content.Name);
+			}
+		});
+
+		settings.RegisterScheme(new CefCustomScheme
+		{
+			SchemeName = "browser",
+			SchemeHandlerFactory = app.ToSchemeHandlerFactory(),
+			IsSecure = true
+		});
 
 		Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
 

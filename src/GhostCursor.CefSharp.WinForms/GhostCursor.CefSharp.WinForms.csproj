@@ -23,9 +23,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="obj\**"/>
-        <EmbeddedResource Remove="obj\**"/>
-        <None Remove="obj\**"/>
+        <Compile Remove="obj\**;bin\**"/>
+        <EmbeddedResource Remove="obj\**;bin\**"/>
+        <None Remove="obj\**;bin\**"/>
     </ItemGroup>
 
     <ItemGroup>

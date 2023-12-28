@@ -3,22 +3,6 @@ using System.Numerics;
 
 namespace GhostCursor;
 
-public interface ICursor
-{
-	Task<IAsyncDisposable> StartAsync(CancellationToken token = default);
-
-	Task StopAsync(CancellationToken token = default);
-
-	Task ClickAsync(string selector, int steps = 100, TimeSpan? moveSpeed = null, CancellationToken token = default);
-
-	Task TypeAsync(string input, CancellationToken token = default);
-}
-
-public interface ICursor<in TElement> : ICursor
-{
-	Task ClickAsync(TElement element, int steps = 100, TimeSpan? moveSpeed = null, CancellationToken token = default);
-}
-
 public class Cursor<TBrowser, TElement> : ICursor<TElement>
 	where TBrowser : IBrowser<TElement>
 {
@@ -68,7 +52,7 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
 	{
 		if (!_isStarted)
 		{
-			throw new InvalidOperationException("Cursor is not started");
+			throw new CursorNotStartedException("Cursor is not started");
 		}
 	}
 
@@ -87,8 +71,13 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
 		var boundingBox = await _browser.GetBoundingBox(element, token);
 		var end = GetRandomPoint(boundingBox);
 
+		if (!await _browser.IsClickableAsync(element, end, token))
+		{
+			throw new CursorElementNotClickableException($"Element '{element}' not clickable.");
+		}
+
 		await MoveAsync(end, steps, moveSpeed, token);
-		await _browser.ClickAsync(end, 50, token);
+		await _browser.ClickAsync(element, end, 50, token);
 	}
 
 	private async Task MoveAsync(Vector2 end, int steps = 100, TimeSpan? moveSpeed = null, CancellationToken token = default)
@@ -176,8 +165,13 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
 
 	private Vector2 GetRandomPoint(BoundingBox boundingBox)
 	{
-		var x = _random.Next((int)boundingBox.Min.X + 5, (int)boundingBox.Max.X - 10);
-		var y = _random.Next((int)boundingBox.Min.Y + 5, (int)boundingBox.Max.Y - 10);
+		var minX = (int)boundingBox.Min.X + 5;
+		var maxX = (int)boundingBox.Max.X - 10;
+		var minY = (int)boundingBox.Min.Y + 5;
+		var maxY = (int)boundingBox.Max.Y - 10;
+
+		var x = maxX - minX <= 0 ? minX : _random.Next(minX, maxX);
+		var y = maxY - minY <= 0 ? minY : _random.Next(minY, maxY);
 
 		return new Vector2(x, y);
 	}

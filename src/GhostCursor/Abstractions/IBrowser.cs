@@ -15,9 +15,11 @@ public interface IBrowser<TElement>
 
 	Task ScrollToAsync(Vector2 point, Random random, TElement element, CancellationToken token = default);
 
-	Task ExecuteJsAsync(string script, CancellationToken token = default);
+	Task<object> ExecuteJsAsync(string script, CancellationToken token = default);
 
-	Task ClickAsync(Vector2 point, int delay = 50, CancellationToken token = default);
+	Task ClickAsync(TElement element, Vector2 point, int delay = 50, CancellationToken token = default);
+
+	Task<bool> IsClickableAsync(TElement element, Vector2 point, CancellationToken token = default);
 
 	Task AllowInputAsync(bool allow, CancellationToken token = default);
 
