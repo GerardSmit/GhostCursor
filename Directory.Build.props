@@ -5,10 +5,11 @@
         <PackageVersion>$(Version)</PackageVersion>
         <Authors>GhostCursor</Authors>
         <RepositoryUrl>https://github.com/GerardSmit/GhostCursor</RepositoryUrl>
-        <Copyright>Copyright © 2023 WebFormsCore</Copyright>
-        <PackageTags>webformscore</PackageTags>
+        <Copyright>Copyright © 2023 GhostCursor</Copyright>
+        <PackageTags>ghostcursor</PackageTags>
         <PackageProjectUrl>https://github.com/GerardSmit/GhostCursor</PackageProjectUrl>
         <PackageLicense>https://github.com/GerardSmit/GhostCursor/blob/main/LICENSE</PackageLicense>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
     </PropertyGroup>
 
 </Project>
