@@ -12,6 +12,7 @@
         <Nullable>enable</Nullable>
         <LangVersion>12</LangVersion>
         <RootNamespace>GhostCursor</RootNamespace>
+        <PlatformTarget>AnyCPU</PlatformTarget>
     </PropertyGroup>
 
     <ItemGroup>

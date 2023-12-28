@@ -8,6 +8,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <LangVersion>11</LangVersion>
         <Platforms>x64</Platforms>
+        <PlatformTarget>x64</PlatformTarget>
         <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
     </PropertyGroup>
