@@ -1,0 +1,33 @@
+﻿<Project>
+    <PropertyGroup>
+        <BaseOutputPath>bin/CefCore/</BaseOutputPath>
+        <BaseIntermediateOutputPath>obj/CefCore/</BaseIntermediateOutputPath>
+    </PropertyGroup>
+
+    <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk"/>
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>12</LangVersion>
+        <RootNamespace>GhostCursor</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CefSharp.Common.NETCore" Version="120.1.110"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\GhostCursor\GhostCursor.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="obj\**"/>
+        <EmbeddedResource Remove="obj\**"/>
+        <None Remove="obj\**"/>
+    </ItemGroup>
+
+    <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk"/>
+
+</Project>

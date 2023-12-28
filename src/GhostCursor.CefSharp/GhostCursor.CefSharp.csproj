@@ -1,0 +1,36 @@
+﻿<Project>
+    <PropertyGroup>
+        <BaseOutputPath>bin/Cef/</BaseOutputPath>
+        <BaseIntermediateOutputPath>obj/Cef/</BaseIntermediateOutputPath>
+    </PropertyGroup>
+
+    <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk"/>
+
+    <PropertyGroup>
+        <TargetFramework>net470</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>12</LangVersion>
+        <RootNamespace>GhostCursor</RootNamespace>
+        <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(MSBuildProjectName)\</IntermediateOutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CefSharp.Common" Version="120.1.110"/>
+        <PackageReference Include="System.Text.Json" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\GhostCursor\GhostCursor.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="obj\**"/>
+        <EmbeddedResource Remove="obj\**"/>
+        <None Remove="obj\**"/>
+    </ItemGroup>
+
+    <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk"/>
+
+</Project>

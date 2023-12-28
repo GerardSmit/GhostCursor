@@ -1,0 +1,34 @@
+﻿<Project>
+    <PropertyGroup>
+        <BaseOutputPath>bin/CefCore/</BaseOutputPath>
+        <BaseIntermediateOutputPath>obj/CefCore/</BaseIntermediateOutputPath>
+    </PropertyGroup>
+
+    <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk"/>
+
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>12</LangVersion>
+        <RootNamespace>GhostCursor</RootNamespace>
+        <UseWindowsForms>true</UseWindowsForms>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CefSharp.WinForms.NETCore" Version="120.1.110"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="obj\**"/>
+        <EmbeddedResource Remove="obj\**"/>
+        <None Remove="obj\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\GhostCursor.CefSharp\GhostCursor.CefSharp.NETCore.csproj"/>
+    </ItemGroup>
+
+    <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk"/>
+
+</Project>

@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor", "src\GhostCursor\GhostCursor.csproj", "{40F3DE13-536D-40D1-9C87-274D410C6A36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor.CefSharp", "src\GhostCursor.CefSharp\GhostCursor.CefSharp.csproj", "{54BEC2FB-0157-4083-8ACD-FFCEC33AFFC0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sandbox", "Sandbox", "{404BB556-6F52-4AAA-AC59-B0FCEF70EE3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "tests\Sandbox\Sandbox.csproj", "{953B3B5C-C23B-48EF-90B9-03B9369A565E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor.CefSharp.WinForms", "src\GhostCursor.CefSharp.WinForms\GhostCursor.CefSharp.WinForms.csproj", "{12667B05-5DF9-452C-A7AE-8FA9285BB701}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor.CefSharp.NETCore", "src\GhostCursor.CefSharp\GhostCursor.CefSharp.NETCore.csproj", "{9A945C56-5679-4096-90E0-F01BEDB132B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor.CefSharp.WinForms.NETCore", "src\GhostCursor.CefSharp.WinForms\GhostCursor.CefSharp.WinForms.NETCore.csproj", "{3CCE1045-702C-419E-89A3-221E0003AD62}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{40F3DE13-536D-40D1-9C87-274D410C6A36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40F3DE13-536D-40D1-9C87-274D410C6A36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40F3DE13-536D-40D1-9C87-274D410C6A36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40F3DE13-536D-40D1-9C87-274D410C6A36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54BEC2FB-0157-4083-8ACD-FFCEC33AFFC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54BEC2FB-0157-4083-8ACD-FFCEC33AFFC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54BEC2FB-0157-4083-8ACD-FFCEC33AFFC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54BEC2FB-0157-4083-8ACD-FFCEC33AFFC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{953B3B5C-C23B-48EF-90B9-03B9369A565E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{953B3B5C-C23B-48EF-90B9-03B9369A565E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{953B3B5C-C23B-48EF-90B9-03B9369A565E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{953B3B5C-C23B-48EF-90B9-03B9369A565E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12667B05-5DF9-452C-A7AE-8FA9285BB701}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12667B05-5DF9-452C-A7AE-8FA9285BB701}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12667B05-5DF9-452C-A7AE-8FA9285BB701}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12667B05-5DF9-452C-A7AE-8FA9285BB701}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A945C56-5679-4096-90E0-F01BEDB132B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A945C56-5679-4096-90E0-F01BEDB132B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A945C56-5679-4096-90E0-F01BEDB132B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A945C56-5679-4096-90E0-F01BEDB132B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CCE1045-702C-419E-89A3-221E0003AD62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CCE1045-702C-419E-89A3-221E0003AD62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CCE1045-702C-419E-89A3-221E0003AD62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CCE1045-702C-419E-89A3-221E0003AD62}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{953B3B5C-C23B-48EF-90B9-03B9369A565E} = {404BB556-6F52-4AAA-AC59-B0FCEF70EE3F}
+	EndGlobalSection
+EndGlobal
