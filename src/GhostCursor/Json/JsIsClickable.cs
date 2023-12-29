@@ -5,6 +5,5 @@ namespace GhostCursor;
 [method: JsonConstructor]
 internal struct JsIsClickable(bool value)
 {
-    [JsonPropertyName("value")]
-    public bool Value { get; set; } = value;
+    [JsonPropertyName("value")] public bool Value { get; set; } = value;
 }

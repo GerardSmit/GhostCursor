@@ -2,15 +2,15 @@ namespace GhostCursor;
 
 internal class Stopper : IAsyncDisposable
 {
-	private readonly ICursor _cursor;
+    private readonly ICursor _cursor;
 
-	public Stopper(ICursor cursor)
-	{
-		_cursor = cursor;
-	}
+    public Stopper(ICursor cursor)
+    {
+        _cursor = cursor;
+    }
 
-	public async ValueTask DisposeAsync()
-	{
-		await _cursor.StopAsync();
-	}
+    public async ValueTask DisposeAsync()
+    {
+        await _cursor.StopAsync();
+    }
 }

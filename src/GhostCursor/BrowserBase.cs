@@ -26,20 +26,20 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
         var script =
             $$"""
               (function() {
-              	const element = {{ToJavaScript(element)}};
-              	
-              	if (!element) {
-              		return "null";
-              	}
-              	
-              	const rect = element.getBoundingClientRect();
-              	
-              	return JSON.stringify({
-              		x: rect.x,
-              		y: rect.y,
-              		width: rect.width,
-              		height: rect.height
-              	});
+                  const element = {{ToJavaScript(element)}};
+                  
+                  if (!element) {
+                      return "null";
+                  }
+                  
+                  const rect = element.getBoundingClientRect();
+                  
+                  return JSON.stringify({
+                      x: rect.x,
+                      y: rect.y,
+                      width: rect.width,
+                      height: rect.height
+                  });
               })();
               """;
 
@@ -74,20 +74,20 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
         var script =
             $$"""
               (function() {
-              	const element = {{ToJavaScript(element)}};
-              	
-              	if (!element) {
-              		return "false";
-              	}
-              	
-              	const rect = element.getBoundingClientRect();
+                  const element = {{ToJavaScript(element)}};
+                  
+                  if (!element) {
+                      return "false";
+                  }
+                  
+                  const rect = element.getBoundingClientRect();
               
-              	return (
-              		rect.top >= 0 &&
-              		rect.left >= 0 &&
-              		rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-              		rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-              	) ? "true" : "false";
+                  return (
+                      rect.top >= 0 &&
+                      rect.left >= 0 &&
+                      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                  ) ? "true" : "false";
               })();
               """;
 
@@ -101,8 +101,8 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
         var script =
             """
             JSON.stringify({
-            	width: window.innerWidth || document.documentElement.clientWidth,
-            	height: window.innerHeight || document.documentElement.clientHeight
+                width: window.innerWidth || document.documentElement.clientWidth,
+                height: window.innerHeight || document.documentElement.clientHeight
             });
             """;
 
@@ -121,29 +121,29 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
         var script =
             $$"""
               (function() {
-              	const element = {{ToJavaScript(element)}};
-              	
-              	if (!element) {
-              		return "null";
-              	}
-              	
-              	const elementAtPoint = document.elementFromPoint({{(int)point.X}}, {{(int)point.Y}});
-              	
-              	let current = elementAtPoint;
-              	
-              	while (current) {
-              		if (current === element) {
-              			return JSON.stringify({
-              				value: true
-              			});
-              		}
-              		
-              		current = current.parentElement;
-              	}
-              	
-              	return JSON.stringify({
-              		value: false
-              	});
+                  const element = {{ToJavaScript(element)}};
+                  
+                  if (!element) {
+                      return "null";
+                  }
+                  
+                  const elementAtPoint = document.elementFromPoint({{(int)point.X}}, {{(int)point.Y}});
+                  
+                  let current = elementAtPoint;
+                  
+                  while (current) {
+                      if (current === element) {
+                          return JSON.stringify({
+                              value: true
+                          });
+                      }
+                      
+                      current = current.parentElement;
+                  }
+                  
+                  return JSON.stringify({
+                      value: false
+                  });
               })();
               """;
 
@@ -162,32 +162,32 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
         var script =
             $$"""
               (function() {
-              	const element = {{ToJavaScript(element)}};
-              	
-              	if (!element) {
-              		return "null";
-              	}
-              	
-              	function getAlternativeElement() {
-              		const selector = `label[for='${element.id}']`;
-              		const label = document.querySelector(selector);
-              		
-              		return label ? selector : "null";
-              	}
-              	
-              	const style = window.getComputedStyle(element);
-              	
-              	if (style.display === 'none' || style.visibility === 'hidden') {
-              		return getAlternativeElement();
-              	}
+                  const element = {{ToJavaScript(element)}};
+                  
+                  if (!element) {
+                      return "null";
+                  }
+                  
+                  function getAlternativeElement() {
+                      const selector = `label[for='${element.id}']`;
+                      const label = document.querySelector(selector);
+                      
+                      return label ? selector : "null";
+                  }
+                  
+                  const style = window.getComputedStyle(element);
+                  
+                  if (style.display === 'none' || style.visibility === 'hidden') {
+                      return getAlternativeElement();
+                  }
               
-              	const rect = element.getBoundingClientRect();
+                  const rect = element.getBoundingClientRect();
               
-              	if (rect.height === 0 || rect.width === 0) {
-              		return getAlternativeElement();
-              	}
-              	
-              	return "null";
+                  if (rect.height === 0 || rect.width === 0) {
+                      return getAlternativeElement();
+                  }
+                  
+                  return "null";
               })();
               """;
 

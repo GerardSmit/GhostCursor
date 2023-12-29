@@ -6,10 +6,17 @@ namespace Sandbox;
 
 public class DefaultForm : Form
 {
+    private CancellationTokenSource _cts = new();
+
     public DefaultForm()
     {
         Width = 800;
         Height = 600;
+
+        Closing += (_, _) =>
+        {
+            _cts.Cancel();
+        };
 
         var cef = new ChromiumWebBrowser("browser://files/scroll.html");
         cef.Dock = DockStyle.Fill;
@@ -17,7 +24,9 @@ public class DefaultForm : Form
 
         Task.Run(async () =>
         {
-            while (true)
+            var token = _cts.Token;
+
+            while (!token.IsCancellationRequested)
             {
                 await cef.WaitForInitialLoadAsync();
 
@@ -25,27 +34,27 @@ public class DefaultForm : Form
 
                 await using (await cursor.StartAsync())
                 {
-                    await cursor.ClickAsync(CefElement.FromSelector("#checkbox"));
+                    await cursor.ClickAsync(CefElement.FromSelector("#checkbox"), token: token);
 
-                    await cursor.ClickAsync(CefElement.FromSelector("#input-a"));
-                    await cursor.TypeAsync("Input A");
+                    await cursor.ClickAsync(CefElement.FromSelector("#input-a"), token: token);
+                    await cursor.TypeAsync("Input A", token: token);
 
-                    await cursor.ClickAsync(CefElement.FromSelector("#input-d"));
-                    await cursor.TypeAsync("Input D");
+                    await cursor.ClickAsync(CefElement.FromSelector("#input-d"), token: token);
+                    await cursor.TypeAsync("Input D", token: token);
 
-                    await cursor.ClickAsync(CefElement.FromSelector("#input-b"));
-                    await cursor.TypeAsync("Input B");
+                    await cursor.ClickAsync(CefElement.FromSelector("#input-b"), token: token);
+                    await cursor.TypeAsync("Input B", token: token);
 
-                    await cursor.ClickAsync(CefElement.FromSelector("#input-c"));
-                    await cursor.TypeAsync("Input C");
+                    await cursor.ClickAsync(CefElement.FromSelector("#input-c"), token: token);
+                    await cursor.TypeAsync("Input C", token: token);
 
-                    await cursor.ClickAsync(CefElement.FromSelector("#input-e"));
-                    await cursor.TypeAsync("Input E");
+                    await cursor.ClickAsync(CefElement.FromSelector("#input-e"), token: token);
+                    await cursor.TypeAsync("Input E", token: token);
                 }
 
                 cef.Reload();
 
-                await Task.Delay(1000);
+                await Task.Delay(1000, token);
             }
         });
     }
