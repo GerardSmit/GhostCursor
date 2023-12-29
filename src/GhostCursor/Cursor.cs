@@ -1,5 +1,6 @@
 ﻿using System.Geometry;
 using System.Numerics;
+using GhostCursor.Utils;
 
 namespace GhostCursor;
 
@@ -20,6 +21,8 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
         _stopper = new Stopper(this);
         _options = options ?? new CursorOptions();
     }
+
+    public IBrowser<TElement> Browser => _browser;
 
     public async Task<IAsyncDisposable> StartAsync(CancellationToken token = default)
     {
@@ -63,6 +66,11 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
         await ClickAsync(element, steps, moveSpeed, token);
     }
 
+    public async Task ClickAsync(ElementSelector selector, int? steps = null, TimeSpan? moveSpeed = null, CancellationToken token = default)
+    {
+        await ClickAsync(await _browser.FindElementAsync(selector, token), steps, moveSpeed, token);
+    }
+
     public async Task ClickAsync(TElement element, int? steps = null, TimeSpan? moveSpeed = null,
         CancellationToken token = default)
     {
@@ -99,7 +107,7 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
         // Create debug point
         if (_options.Debug)
         {
-            await _browser.ExecuteJsAsync(
+            await _browser.EvaluateExpressionAsync(
                 $$"""
                   (function() {
                       const point = document.createElement('div');
@@ -142,7 +150,7 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
 
             if (_options.Debug)
             {
-                await _browser.ExecuteJsAsync(
+                await _browser.EvaluateExpressionAsync(
                     $$"""
                       (function() {
                           window.debugPoint.style.left = '{{point.X}}px';
@@ -156,7 +164,7 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
 
         if (_options.Debug)
         {
-            await _browser.ExecuteJsAsync(
+            await _browser.EvaluateExpressionAsync(
                 """
                 (function() {
                     window.debugPoint.remove();

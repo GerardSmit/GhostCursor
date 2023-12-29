@@ -33,22 +33,22 @@ public class CursorTests
 
         await using (await cursor.StartAsync())
         {
-            await cursor.ClickAsync(BrowserElement.FromSelector("#checkbox-a"));
-            await cursor.ClickAsync(BrowserElement.FromSelector("#checkbox-b"));
+            await cursor.ClickAsync(await page.QuerySelectorAsync("#checkbox-a"));
+            await cursor.ClickAsync(await page.QuerySelectorAsync("#checkbox-b"));
 
-            await cursor.ClickAsync(BrowserElement.FromSelector("#input-a"));
+            await cursor.ClickAsync(await page.QuerySelectorAsync("#input-a"));
             await cursor.TypeAsync("Input A");
 
-            await cursor.ClickAsync(BrowserElement.FromSelector("#input-d"));
+            await cursor.ClickAsync(await page.QuerySelectorAsync("#input-d"));
             await cursor.TypeAsync("Input D");
 
-            await cursor.ClickAsync(BrowserElement.FromSelector("#input-b"));
+            await cursor.ClickAsync(await page.QuerySelectorAsync("#input-b"));
             await cursor.TypeAsync("Input B");
 
-            await cursor.ClickAsync(BrowserElement.FromSelector("#input-c"));
+            await cursor.ClickAsync(await page.QuerySelectorAsync("#input-c"));
             await cursor.TypeAsync("Input C");
 
-            await cursor.ClickAsync(BrowserElement.FromSelector("#input-e"));
+            await cursor.ClickAsync(await page.QuerySelectorAsync("#input-e"));
             await cursor.TypeAsync("Input E");
         }
 

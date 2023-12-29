@@ -43,22 +43,22 @@ public class DefaultForm : Form
 
                 await using (await cursor.StartAsync())
                 {
-                    await cursor.ClickAsync(BrowserElement.FromSelector("#checkbox-a"), token: token);
-                    await cursor.ClickAsync(BrowserElement.FromSelector("#checkbox-b"), token: token);
+                    await cursor.ClickAsync(ElementSelector.FromCss("#checkbox-a"), token: token);
+                    await cursor.ClickAsync(ElementSelector.FromCss("#checkbox-b"), token: token);
 
-                    await cursor.ClickAsync(BrowserElement.FromSelector("#input-a"), token: token);
+                    await cursor.ClickAsync(ElementSelector.FromCss("#input-a"), token: token);
                     await cursor.TypeAsync("Input A", token: token);
 
-                    await cursor.ClickAsync(BrowserElement.FromSelector("#input-d"), token: token);
+                    await cursor.ClickAsync(ElementSelector.FromCss("#input-d"), token: token);
                     await cursor.TypeAsync("Input D", token: token);
 
-                    await cursor.ClickAsync(BrowserElement.FromSelector("#input-b"), token: token);
+                    await cursor.ClickAsync(ElementSelector.FromCss("#input-b"), token: token);
                     await cursor.TypeAsync("Input B", token: token);
 
-                    await cursor.ClickAsync(BrowserElement.FromSelector("#input-c"), token: token);
+                    await cursor.ClickAsync(ElementSelector.FromCss("#input-c"), token: token);
                     await cursor.TypeAsync("Input C", token: token);
 
-                    await cursor.ClickAsync(BrowserElement.FromSelector("#input-e"), token: token);
+                    await cursor.ClickAsync(ElementSelector.FromCss("#input-e"), token: token);
                     await cursor.TypeAsync("Input E", token: token);
                 }
 

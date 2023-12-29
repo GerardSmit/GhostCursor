@@ -50,10 +50,10 @@ var cursor = page.CreateCursor(options);
 // Search for "Hello world" with the cursor
 await using (await cursor.StartAsync())
 {
-    await cursor.ClickAsync(BrowserElement.FromXPath("//div[text() = 'Reject all']"));
-    await cursor.ClickAsync(BrowserElement.FromSelector("[title='Search']"));
+    await cursor.ClickAsync(ElementSelector.FromXPath("//div[text() = 'Reject all']"));
+    await cursor.ClickAsync("[title='Search']");
     await cursor.TypeAsync("Hello world");
-    await cursor.ClickAsync(BrowserElement.FromSelector("input[value='Google Search']"));
+    await cursor.ClickAsync("input[value='Google Search']");
     await page.WaitForNavigationAsync();
 }
 

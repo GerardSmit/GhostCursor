@@ -33,6 +33,19 @@ public interface ICursor
     Task ClickAsync(string selector, int? steps = null, TimeSpan? moveSpeed = null, CancellationToken token = default);
 
     /// <summary>
+    /// Clicks the element at the specified selector.
+    /// </summary>
+    /// <param name="selector">The element to click.</param>
+    /// <param name="steps">The number of steps to move the cursor.</param>
+    /// <param name="moveSpeed">The speed to move the cursor.</param>
+    /// <param name="token">The cancellation token.</param>
+    /// <returns>Returns a task that completes when the click is complete.</returns>
+    /// <exception cref="CursorElementNotFoundException">Thrown when the element is not found.</exception>
+    /// <exception cref="CursorElementNotVisibleException">Thrown when the element is not visible.</exception>
+    /// <exception cref="CursorNotStartedException">Thrown when the cursor is not started.</exception>
+    Task ClickAsync(ElementSelector selector, int? steps = null, TimeSpan? moveSpeed = null, CancellationToken token = default);
+
+    /// <summary>
     /// Types the specified input.
     /// </summary>
     /// <param name="input">The input.</param>
@@ -41,8 +54,13 @@ public interface ICursor
     Task TypeAsync(string input, CancellationToken token = default);
 }
 
-public interface ICursor<in TElement> : ICursor
+public interface ICursor<TElement> : ICursor
 {
+    /// <summary>
+    /// Underlying browser.
+    /// </summary>
+    IBrowser<TElement> Browser { get; }
+
     /// <summary>
     /// Clicks the element at the specified selector.
     /// </summary>

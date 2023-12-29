@@ -2,6 +2,7 @@
 using System.Geometry;
 using System.Numerics;
 using System.Text.Json;
+using GhostCursor.Utils;
 
 namespace GhostCursor;
 
@@ -19,31 +20,14 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
     /// <returns>The JavaScript representation of the element.</returns>
     protected abstract string ToJavaScript(TElement element);
 
+    public abstract Task<TElement> FindElementAsync(ElementSelector selector, CancellationToken token = default);
+
     public abstract Task<TElement> FindElementAsync(string selector, CancellationToken token = default);
 
     public virtual async Task<BoundingBox> GetBoundingBox(TElement element, CancellationToken token = default)
     {
-        var script =
-            $$"""
-              (function() {
-                  const element = {{ToJavaScript(element)}};
-
-                  if (!element) {
-                      return "null";
-                  }
-
-                  const rect = element.getBoundingClientRect();
-
-                  return JSON.stringify({
-                      x: rect.x,
-                      y: rect.y,
-                      width: rect.width,
-                      height: rect.height
-                  });
-              })();
-              """;
-
-        var json = await ExecuteJsAsync(script, token);
+        var script = $"{JsMethods.ElementGetBoundingBox}({ToJavaScript(element)})";
+        var json = await EvaluateExpressionAsync(script, token);
         var nullable = JsonSerializer.Deserialize(json.ToString()!, JsJsonContext.Default.NullableJsBoundingBox);
 
         if (nullable is not { } result)
@@ -71,86 +55,32 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
 
     public virtual async Task<bool> IsInViewportAsync(TElement element, CancellationToken token = default)
     {
-        var script =
-            $$"""
-              (function() {
-                  const element = {{ToJavaScript(element)}};
-
-                  if (!element) {
-                      return "false";
-                  }
-
-                  const rect = element.getBoundingClientRect();
-
-                  return (
-                      rect.top >= 0 &&
-                      rect.left >= 0 &&
-                      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-                      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-                  ) ? "true" : "false";
-              })();
-              """;
-
-        var json = await ExecuteJsAsync(script, token);
+        var script = $"{JsMethods.ElementInViewPort}({ToJavaScript(element)})";
+        var json = await EvaluateExpressionAsync(script, token);
 
         return json.ToString() == "true";
     }
 
     public virtual async Task<Size> GetViewportAsync(CancellationToken token = default)
     {
-        var script =
-            """
-            JSON.stringify({
-                width: window.innerWidth || document.documentElement.clientWidth,
-                height: window.innerHeight || document.documentElement.clientHeight
-            });
-            """;
+        const string script = JsMethods.WindowSizeAsJsonObject;
 
-        var json = await ExecuteJsAsync(script, token);
+        var json = await EvaluateExpressionAsync(script, token);
         var result = JsonSerializer.Deserialize(json.ToString()!, JsJsonContext.Default.JsViewport);
 
         return new Size(result.Width, result.Height);
     }
 
-    public abstract Task<object> ExecuteJsAsync(string script, CancellationToken token = default);
+    public abstract Task<object> EvaluateExpressionAsync(string script, CancellationToken token = default);
 
     public abstract Task ClickAsync(TElement element, Vector2 point, int delay = 50, CancellationToken token = default);
 
     public virtual async Task<bool> IsClickableAsync(TElement element, Vector2 point, CancellationToken token = default)
     {
-        var script =
-            $$"""
-              (function() {
-                  const element = {{ToJavaScript(element)}};
+        var script = $"{JsMethods.ElementIsClickable}({ToJavaScript(element)}, {(int)point.X}, {(int)point.Y});";
+        var result = (bool)await EvaluateExpressionAsync(script, token);
 
-                  if (!element) {
-                      return "null";
-                  }
-
-                  const elementAtPoint = document.elementFromPoint({{(int)point.X}}, {{(int)point.Y}});
-
-                  let current = elementAtPoint;
-
-                  while (current) {
-                      if (current === element) {
-                          return JSON.stringify({
-                              value: true
-                          });
-                      }
-
-                      current = current.parentElement;
-                  }
-
-                  return JSON.stringify({
-                      value: false
-                  });
-              })();
-              """;
-
-        var json = await ExecuteJsAsync(script, token);
-        var result = JsonSerializer.Deserialize(json.ToString(), JsJsonContext.Default.JsIsClickable);
-
-        return result.Value;
+        return result;
     }
 
     public abstract Task AllowInputAsync(bool allow, CancellationToken token = default);
@@ -159,89 +89,32 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
 
     public virtual async Task<TElement> GetClickableElementAsync(TElement element, CancellationToken token = default)
     {
-        var script =
-            $$"""
-              (function() {
-                  const element = {{ToJavaScript(element)}};
+        var script = $"{JsMethods.GetClickableElement}({ToJavaScript(element)})";
+        var selector = (string?) await EvaluateExpressionAsync(script, token);
 
-                  if (!element) {
-                      return "null";
-                  }
-
-                  function getSelector(elm) {
-                      if (elm.tagName === "BODY") return "BODY";
-
-                      const names = [];
-                      while (elm.parentElement && elm.tagName !== "BODY") {
-                          if (elm.id) {
-                              names.unshift("#" + elm.getAttribute("id"));
-                              break;
-                          } else {
-                              let c = 1, e = elm;
-                              for (; e.previousElementSibling; e = e.previousElementSibling, c++) ;
-                              names.unshift(elm.tagName + ":nth-child(" + c + ")");
-                          }
-                          elm = elm.parentElement;
-                      }
-                      return names.join(">");
-                  }
-
-                  function getAlternativeElement() {
-                      const selector = `label[for='${element.id}']`;
-                      const label = document.querySelector(selector);
-
-                      if (label) {
-                        return selector;
-                      }
-
-                      let current = element.parentElement;
-
-                      while (current) {
-                          if (current.tagName === 'LABEL') {
-                              return getSelector(current);
-                          }
-
-                          current = current.parentElement;
-                      }
-
-                      return "null";
-                  }
-
-                  const style = window.getComputedStyle(element);
-
-                  if (style.display === 'none' || style.visibility === 'hidden') {
-                      return getAlternativeElement();
-                  }
-
-                  const rect = element.getBoundingClientRect();
-
-                  if (rect.height === 0 || rect.width === 0) {
-                      return getAlternativeElement();
-                  }
-
-                  return "null";
-              })();
-              """;
-
-        var json = await ExecuteJsAsync(script, token);
-
-        return json.ToString() switch
+        if (selector is null)
         {
-            "null" => element,
-            { } selector => await FindElementAsync(selector, token),
-        };
+            return element;
+        }
+
+        return await FindElementAsync(selector, token);
     }
 }
 
-public abstract class BrowserBase : BrowserBase<BrowserElement>
+public abstract class BrowserBase : BrowserBase<ElementSelector>
 {
-    protected override string ToJavaScript(BrowserElement element)
+    protected override string ToJavaScript(ElementSelector selector)
     {
-        return element.Script;
+        return selector.ToJavaScript();
     }
 
-    public override Task<BrowserElement> FindElementAsync(string selector, CancellationToken token = default)
+    public override Task<ElementSelector> FindElementAsync(string selector, CancellationToken token = default)
     {
-        return Task.FromResult(BrowserElement.FromSelector(selector));
+        return Task.FromResult(ElementSelector.FromCss(selector));
+    }
+
+    public override Task<ElementSelector> FindElementAsync(ElementSelector selector, CancellationToken token = default)
+    {
+        return Task.FromResult(selector);
     }
 }

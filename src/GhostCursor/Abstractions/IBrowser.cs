@@ -6,6 +6,8 @@ namespace GhostCursor;
 
 public interface IBrowser<TElement>
 {
+    Task<TElement> FindElementAsync(ElementSelector selector, CancellationToken token = default);
+
     Task<TElement> FindElementAsync(string selector, CancellationToken token = default);
 
     Task<BoundingBox> GetBoundingBox(TElement element, CancellationToken token = default);
@@ -20,7 +22,7 @@ public interface IBrowser<TElement>
 
     Task<Size> GetViewportAsync(CancellationToken token = default);
 
-    Task<object> ExecuteJsAsync(string script, CancellationToken token = default);
+    Task<object> EvaluateExpressionAsync(string script, CancellationToken token = default);
 
     Task ClickAsync(TElement element, Vector2 point, int delay = 50, CancellationToken token = default);
 

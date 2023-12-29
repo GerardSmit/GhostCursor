@@ -20,7 +20,7 @@ public static class MouseUtils
         {
             if (attempts > 0)
             {
-                var isAtBottom = await browser.ExecuteJsAsync("JSON.stringify(window.innerHeight + window.scrollY >= document.body.offsetHeight)", token);
+                var isAtBottom = await browser.EvaluateExpressionAsync("JSON.stringify(window.innerHeight + window.scrollY >= document.body.offsetHeight)", token);
 
                 if (isAtBottom is "true")
                 {

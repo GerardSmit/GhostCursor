@@ -15,23 +15,23 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase
         return Task.CompletedTask;
     }
 
-    public override Task ScrollToAsync(Vector2 point, Random random, BrowserElement element, CancellationToken token = default)
+    public override Task ScrollToAsync(Vector2 point, Random random, ElementSelector selector, CancellationToken token = default)
     {
-        return MouseUtils.ScrollDeltaAsync(random, this, element, (deltaY) =>
+        return MouseUtils.ScrollDeltaAsync(random, this, selector, (deltaY) =>
         {
             browser.SendMouseWheelEvent((int)point.X, (int)point.Y, 0, deltaY, CefEventFlags.None);
             return Task.CompletedTask;
         }, token);
     }
 
-    public override async Task<object> ExecuteJsAsync(string script, CancellationToken token = default)
+    public override async Task<object> EvaluateExpressionAsync(string script, CancellationToken token = default)
     {
         var response = await browser.EvaluateScriptAsync(script: script);
 
         return response.Result;
     }
 
-    public override async Task ClickAsync(BrowserElement element, Vector2 point, int delay = 50,
+    public override async Task ClickAsync(ElementSelector selector, Vector2 point, int delay = 50,
         CancellationToken token = default)
     {
         var host = browser.GetBrowser().GetHost();
