@@ -86,7 +86,9 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase<CefEleme
 
 	public override async Task<object> ExecuteJsAsync(string script, CancellationToken token = default)
 	{
-		return (await browser.EvaluateScriptAsync(script: script)).Result;
+		var response = await browser.EvaluateScriptAsync(script: script);
+
+		return response.Result;
 	}
 
 	public override async Task ClickAsync(CefElement element, Vector2 point, int delay = 50, CancellationToken token = default)

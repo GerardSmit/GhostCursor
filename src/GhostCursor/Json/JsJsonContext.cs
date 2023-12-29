@@ -6,4 +6,5 @@ namespace GhostCursor;
 [JsonSerializable(typeof(JsIsClickable))]
 [JsonSerializable(typeof(JsViewport))]
 [JsonSerializable(typeof(bool))]
+[JsonSerializable(typeof(string))]
 internal partial class JsJsonContext : JsonSerializerContext;

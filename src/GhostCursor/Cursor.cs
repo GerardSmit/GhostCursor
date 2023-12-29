@@ -66,6 +66,8 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
 	{
 		ValidateStarted();
 
+		element = await _browser.GetClickableElementAsync(element, token);
+
 		if (!await _browser.IsInViewportAsync(element, token))
 		{
 			await _browser.ScrollToAsync(_cursor, _random, element, token);

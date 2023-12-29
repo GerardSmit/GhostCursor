@@ -1,4 +1,5 @@
-﻿using CefSharp.WinForms;
+﻿using CefSharp;
+using CefSharp.WinForms;
 using GhostCursor;
 
 namespace Sandbox;
@@ -15,27 +16,36 @@ public class DefaultForm : Form
         Controls.Add(cef);
 
         Task.Run(async () =>
-        {   
-            await cef.WaitForInitialLoadAsync();
-
-            var cursor = cef.CreateCursor(debug: true);
-
-            await using (await cursor.StartAsync())
+        {
+            while (true)
             {
-                await cursor.ClickAsync(CefElement.FromSelector("#input-a"));
-                await cursor.TypeAsync("Input A");
+                await cef.WaitForInitialLoadAsync();
 
-                await cursor.ClickAsync(CefElement.FromSelector("#input-d"));
-                await cursor.TypeAsync("Input D");
+                var cursor = cef.CreateCursor(debug: true);
 
-                await cursor.ClickAsync(CefElement.FromSelector("#input-b"));
-                await cursor.TypeAsync("Input B");
+                await using (await cursor.StartAsync())
+                {
+                    await cursor.ClickAsync(CefElement.FromSelector("#checkbox"));
 
-                await cursor.ClickAsync(CefElement.FromSelector("#input-c"));
-                await cursor.TypeAsync("Input C");
+                    await cursor.ClickAsync(CefElement.FromSelector("#input-a"));
+                    await cursor.TypeAsync("Input A");
 
-                await cursor.ClickAsync(CefElement.FromSelector("#input-e"));
-                await cursor.TypeAsync("Input E");
+                    await cursor.ClickAsync(CefElement.FromSelector("#input-d"));
+                    await cursor.TypeAsync("Input D");
+
+                    await cursor.ClickAsync(CefElement.FromSelector("#input-b"));
+                    await cursor.TypeAsync("Input B");
+
+                    await cursor.ClickAsync(CefElement.FromSelector("#input-c"));
+                    await cursor.TypeAsync("Input C");
+
+                    await cursor.ClickAsync(CefElement.FromSelector("#input-e"));
+                    await cursor.TypeAsync("Input E");
+                }
+
+                cef.Reload();
+
+                await Task.Delay(1000);
             }
         });
     }

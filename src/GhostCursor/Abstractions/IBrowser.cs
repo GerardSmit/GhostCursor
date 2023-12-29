@@ -29,4 +29,6 @@ public interface IBrowser<TElement>
 	Task AllowInputAsync(bool allow, CancellationToken token = default);
 
 	Task TypeAsync(Random random, string text, CancellationToken token = default);
+
+	Task<TElement> GetClickableElementAsync(TElement element, CancellationToken token = default);
 }
