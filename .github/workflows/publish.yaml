@@ -36,5 +36,5 @@ jobs:
             src/GhostCursor.CefSharp/GhostCursor.CefSharp.NETCore.csproj
             src/GhostCursor.CefSharp.WinForms/GhostCursor.CefSharp.WinForms.csproj
             src/GhostCursor.CefSharp.WinForms/GhostCursor.CefSharp.WinForms.NETCore.csproj
-            src/GhostCursor.PuppeteerSharp/GhostCursor.PuppeteerSharp.NETCore.csproj
+            src/GhostCursor.PuppeteerSharp/GhostCursor.PuppeteerSharp.csproj
       
