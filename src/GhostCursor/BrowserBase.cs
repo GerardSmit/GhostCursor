@@ -56,9 +56,9 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
     public virtual async Task<bool> IsInViewportAsync(TElement element, CancellationToken token = default)
     {
         var script = $"{JsMethods.ElementInViewPort}({ToJavaScript(element)})";
-        var json = await EvaluateExpressionAsync(script, token);
+        var result = (bool) await EvaluateExpressionAsync(script, token);
 
-        return json.ToString() == "true";
+        return result;
     }
 
     public virtual async Task<Size> GetViewportAsync(CancellationToken token = default)

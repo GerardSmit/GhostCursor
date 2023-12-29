@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\GhostCursor.Selenium\GhostCursor.Selenium.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="120.0.6099.10900"/>
+    </ItemGroup>
+
+</Project>

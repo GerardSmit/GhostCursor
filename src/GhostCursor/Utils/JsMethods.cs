@@ -16,7 +16,7 @@ public static class JsMethods
         """
         ((element) => {
             if (!element) {
-                return "false";
+                return false;
             }
 
             const rect = element.getBoundingClientRect();
@@ -26,7 +26,7 @@ public static class JsMethods
                 rect.left >= 0 &&
                 rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
                 rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-            ) ? "true" : "false";
+            );
         })
         """;
 

@@ -9,6 +9,7 @@ Install one of the following NuGet packages:
 - For PuppeteerSharp: [`GhostCursor.PuppeteerSharp`](https://www.nuget.org/packages/GhostCursor.PuppeteerSharp/)
 - For CefSharp WinForms in .NET Framework: [`GhostCursor.CefSharp.WinForms`](https://www.nuget.org/packages/GhostCursor.CefSharp.WinForms/)
 - For CefSharp WinForms in .NET (Core): [`GhostCursor.CefSharp.WinForms.NetCore`](https://www.nuget.org/packages/GhostCursor.CefSharp.WinForms.NETCore/)
+- For Selenium: [`GhostCursor.Selenium`](https://www.nuget.org/packages/GhostCursor.Selenium/)
 
 ## Clicking elements
 When trying to click an element, the library checks if:

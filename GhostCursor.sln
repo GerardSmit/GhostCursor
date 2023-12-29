@@ -22,6 +22,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor.PuppeteerSharp.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox.PuppeteerSharp", "tests\Sandbox.PuppeteerSharp\Sandbox.PuppeteerSharp.csproj", "{A6753EE3-CC21-493F-A3F4-067899E4043F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor.Selenium", "src\GhostCursor.Selenium\GhostCursor.Selenium.csproj", "{6DE56129-BEF2-444F-A0AE-D3125634382F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox.Selenium", "tests\Sandbox.Selenium\Sandbox.Selenium.csproj", "{D2320553-2F3C-4930-8C4C-6448662FB075}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,10 +68,19 @@ Global
 		{A6753EE3-CC21-493F-A3F4-067899E4043F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6753EE3-CC21-493F-A3F4-067899E4043F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6753EE3-CC21-493F-A3F4-067899E4043F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DE56129-BEF2-444F-A0AE-D3125634382F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DE56129-BEF2-444F-A0AE-D3125634382F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DE56129-BEF2-444F-A0AE-D3125634382F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DE56129-BEF2-444F-A0AE-D3125634382F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2320553-2F3C-4930-8C4C-6448662FB075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2320553-2F3C-4930-8C4C-6448662FB075}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2320553-2F3C-4930-8C4C-6448662FB075}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2320553-2F3C-4930-8C4C-6448662FB075}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{953B3B5C-C23B-48EF-90B9-03B9369A565E} = {404BB556-6F52-4AAA-AC59-B0FCEF70EE3F}
 		{B01B7240-E2D3-42F1-85C4-09CD68FFC785} = {9962DEC4-AD3B-4035-97A7-D5862685CD0B}
 		{A6753EE3-CC21-493F-A3F4-067899E4043F} = {404BB556-6F52-4AAA-AC59-B0FCEF70EE3F}
+		{D2320553-2F3C-4930-8C4C-6448662FB075} = {404BB556-6F52-4AAA-AC59-B0FCEF70EE3F}
 	EndGlobalSection
 EndGlobal
