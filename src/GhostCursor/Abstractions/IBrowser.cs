@@ -1,4 +1,5 @@
-﻿using System.Geometry;
+﻿using System.Drawing;
+using System.Geometry;
 using System.Numerics;
 
 namespace GhostCursor;
@@ -14,6 +15,10 @@ public interface IBrowser<TElement>
 	Task MoveCursorToAsync(Vector2 point, CancellationToken token = default);
 
 	Task ScrollToAsync(Vector2 point, Random random, TElement element, CancellationToken token = default);
+
+	Task<bool> IsInViewportAsync(TElement element, CancellationToken token = default);
+
+	Task<Size> GetViewportAsync(CancellationToken token = default);
 
 	Task<object> ExecuteJsAsync(string script, CancellationToken token = default);
 

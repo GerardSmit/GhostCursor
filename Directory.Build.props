@@ -1,11 +1,11 @@
 <Project>
 
     <PropertyGroup>
-        <Version>0.0.1-alpha.3</Version>
+        <Version>0.0.1-alpha.4</Version>
         <PackageVersion>$(Version)</PackageVersion>
         <Authors>GhostCursor</Authors>
         <RepositoryUrl>https://github.com/GerardSmit/GhostCursor</RepositoryUrl>
-        <Copyright>Copyright © 2023 GhostCursor</Copyright>
+        <Copyright>Copyright © 2023 Gerard Smit</Copyright>
         <PackageTags>ghostcursor</PackageTags>
         <PackageProjectUrl>https://github.com/GerardSmit/GhostCursor</PackageProjectUrl>
         <PackageLicense>https://github.com/GerardSmit/GhostCursor/blob/main/LICENSE</PackageLicense>

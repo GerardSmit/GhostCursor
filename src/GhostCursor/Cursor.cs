@@ -66,10 +66,13 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
 	{
 		ValidateStarted();
 
-		await _browser.ScrollToAsync(_cursor, _random, element, token);
+		if (!await _browser.IsInViewportAsync(element, token))
+		{
+			await _browser.ScrollToAsync(_cursor, _random, element, token);
+		}
 
 		var boundingBox = await _browser.GetBoundingBox(element, token);
-		var end = GetRandomPoint(boundingBox);
+		var end = await GetRandomPointAsync(boundingBox);
 
 		if (!await _browser.IsClickableAsync(element, end, token))
 		{
@@ -163,12 +166,13 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
 		return TimeSpan.FromMilliseconds(Math.Min(distance / 3, 200));
 	}
 
-	private Vector2 GetRandomPoint(BoundingBox boundingBox)
+	private async Task<Vector2> GetRandomPointAsync(BoundingBox boundingBox)
 	{
+		var viewPort = await _browser.GetViewportAsync();
 		var minX = (int)boundingBox.Min.X + 5;
 		var maxX = (int)boundingBox.Max.X - 10;
-		var minY = (int)boundingBox.Min.Y + 5;
-		var maxY = (int)boundingBox.Max.Y - 10;
+		var minY = Math.Max((int)boundingBox.Min.Y + 5, 0);
+		var maxY = Math.Min((int)boundingBox.Max.Y - 10, viewPort.Height - 10);
 
 		var x = maxX - minX <= 0 ? minX : _random.Next(minX, maxX);
 		var y = maxY - minY <= 0 ? minY : _random.Next(minY, maxY);

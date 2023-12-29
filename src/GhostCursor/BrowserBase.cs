@@ -1,4 +1,5 @@
-﻿using System.Geometry;
+﻿using System.Drawing;
+using System.Geometry;
 using System.Numerics;
 using System.Text.Json;
 
@@ -36,8 +37,8 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
               	return JSON.stringify({
               		x: rect.x,
               		y: rect.y,
-              		width: Math.min(rect.width, window.innerWidth - rect.x),
-              		height: Math.min(rect.height, window.innerHeight - rect.y)
+              		width: rect.width,
+              		height: rect.height
               	});
               })();
               """;
@@ -66,6 +67,49 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
     public abstract Task MoveCursorToAsync(Vector2 point, CancellationToken token = default);
 
     public abstract Task ScrollToAsync(Vector2 point, Random random, TElement element, CancellationToken token = default);
+
+    public async Task<bool> IsInViewportAsync(TElement element, CancellationToken token = default)
+    {
+	    var script =
+		    $$"""
+			  (function() {
+			  	const element = {{ToJavaScript(element)}};
+			  	
+			  	if (!element) {
+			  		return "false";
+			  	}
+			  	
+			  	const rect = element.getBoundingClientRect();
+			  
+			  	return (
+			  		rect.top >= 0 &&
+			  		rect.left >= 0 &&
+			  		rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+			  		rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+			  	) ? "true" : "false";
+			  })();
+			  """;
+
+	    var json = await ExecuteJsAsync(script, token);
+
+	    return json.ToString() == "true";
+    }
+
+    public async Task<Size> GetViewportAsync(CancellationToken token = default)
+    {
+	    var script =
+		    """
+		    JSON.stringify({
+		    	width: window.innerWidth || document.documentElement.clientWidth,
+		    	height: window.innerHeight || document.documentElement.clientHeight
+		    });
+		    """;
+
+	    var json = await ExecuteJsAsync(script, token);
+	    var result = JsonSerializer.Deserialize(json.ToString()!, JsJsonContext.Default.JsViewport);
+
+	    return new Size(result.Width, result.Height);
+    }
 
     public abstract Task<object> ExecuteJsAsync(string script, CancellationToken token = default);
 

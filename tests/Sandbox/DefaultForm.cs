@@ -25,11 +25,17 @@ public class DefaultForm : Form
                 await cursor.ClickAsync(CefElement.FromSelector("#input-a"));
                 await cursor.TypeAsync("Input A");
 
-                await cursor.ClickAsync(CefElement.FromSelector("#input-c"));
-                await cursor.TypeAsync("Input C");
+                await cursor.ClickAsync(CefElement.FromSelector("#input-d"));
+                await cursor.TypeAsync("Input D");
 
                 await cursor.ClickAsync(CefElement.FromSelector("#input-b"));
                 await cursor.TypeAsync("Input B");
+
+                await cursor.ClickAsync(CefElement.FromSelector("#input-c"));
+                await cursor.TypeAsync("Input C");
+
+                await cursor.ClickAsync(CefElement.FromSelector("#input-e"));
+                await cursor.TypeAsync("Input E");
             }
         });
     }

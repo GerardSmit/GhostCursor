@@ -24,12 +24,29 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase<CefEleme
 		return Task.CompletedTask;
 	}
 
+	private async Task<int> GetYOffset(int randomOffset, CefElement element, CancellationToken token = default)
+	{
+		var boundingBox = await GetBoundingBox(element, token);
+		var targetY = (int)Math.Floor(boundingBox.Min.Y);
+		var height = (int)(boundingBox.Max.Y - boundingBox.Min.Y);
+		var viewport = await GetViewportAsync(token);
+		var isDown = targetY > 0;
+
+		if (isDown)
+		{
+			return targetY - viewport.Height + height + randomOffset;
+		}
+
+		return targetY - randomOffset;
+	}
+
 	public override async Task ScrollToAsync(Vector2 point, Random random, CefElement element, CancellationToken token = default)
 	{
 		var attempts = 0;
-		var boundingBox = await GetBoundingBox(element, token);
+		var randomOffset = random.Next(5, 30);
+		var targetY = await GetYOffset(randomOffset, element, token);
 
-		while (Math.Abs(boundingBox.Min.Y) > 2)
+		while (Math.Abs(targetY) > randomOffset + 2)
 		{
 			if (attempts > 0)
 			{
@@ -46,7 +63,7 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase<CefEleme
 				break;
 			}
 
-			var y = (int)Math.Floor(boundingBox.Min.Y);
+			var y = targetY;
 			var isDown = y > 0;
 			var currentY = 0;
 			var host = browser.GetBrowser().GetHost();
@@ -63,7 +80,7 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase<CefEleme
 				currentY += scrollY;
 			}
 
-			boundingBox = await GetBoundingBox(element, token);
+			targetY = await GetYOffset(randomOffset, element, token);
 		}
 	}
 
