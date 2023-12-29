@@ -1,9 +1,8 @@
 ﻿using System.Numerics;
 using System.Windows.Forms;
 using CefSharp.WinForms;
-using GhostCursor;
 
-namespace Sandbox;
+namespace GhostCursor.CefSharp;
 
 public class CefBrowserForm : CefBrowserImpl
 {

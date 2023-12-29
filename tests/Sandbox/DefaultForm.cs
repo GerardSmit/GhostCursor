@@ -1,6 +1,7 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
 using GhostCursor;
+using GhostCursor.CefSharp;
 
 namespace Sandbox;
 
@@ -30,25 +31,31 @@ public class DefaultForm : Form
             {
                 await cef.WaitForInitialLoadAsync();
 
-                var cursor = cef.CreateCursor(debug: true);
+                var options = new CursorOptions
+                {
+                    Debug = true
+                };
+
+                var cursor = cef.CreateCursor(options);
 
                 await using (await cursor.StartAsync())
                 {
-                    await cursor.ClickAsync(CefElement.FromSelector("#checkbox"), token: token);
+                    await cursor.ClickAsync(BrowserElement.FromSelector("#checkbox-a"), token: token);
+                    await cursor.ClickAsync(BrowserElement.FromSelector("#checkbox-b"), token: token);
 
-                    await cursor.ClickAsync(CefElement.FromSelector("#input-a"), token: token);
+                    await cursor.ClickAsync(BrowserElement.FromSelector("#input-a"), token: token);
                     await cursor.TypeAsync("Input A", token: token);
 
-                    await cursor.ClickAsync(CefElement.FromSelector("#input-d"), token: token);
+                    await cursor.ClickAsync(BrowserElement.FromSelector("#input-d"), token: token);
                     await cursor.TypeAsync("Input D", token: token);
 
-                    await cursor.ClickAsync(CefElement.FromSelector("#input-b"), token: token);
+                    await cursor.ClickAsync(BrowserElement.FromSelector("#input-b"), token: token);
                     await cursor.TypeAsync("Input B", token: token);
 
-                    await cursor.ClickAsync(CefElement.FromSelector("#input-c"), token: token);
+                    await cursor.ClickAsync(BrowserElement.FromSelector("#input-c"), token: token);
                     await cursor.TypeAsync("Input C", token: token);
 
-                    await cursor.ClickAsync(CefElement.FromSelector("#input-e"), token: token);
+                    await cursor.ClickAsync(BrowserElement.FromSelector("#input-e"), token: token);
                     await cursor.TypeAsync("Input E", token: token);
                 }
 

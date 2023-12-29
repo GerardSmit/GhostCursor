@@ -9,16 +9,16 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
     private readonly Stopper _stopper;
     private readonly TBrowser _browser;
     private readonly Random _random;
-    private readonly bool _debug;
+    private readonly CursorOptions _options;
     private bool _isStarted;
     private Vector2 _cursor;
 
-    public Cursor(TBrowser browser, Random? random = null, bool debug = false)
+    public Cursor(TBrowser browser, CursorOptions? options = null)
     {
         _browser = browser;
-        _random = random ?? ThreadRandom.Instance;
-        _debug = debug;
+        _random = options?.Random ?? ThreadRandom.Instance;
         _stopper = new Stopper(this);
+        _options = options ?? new CursorOptions();
     }
 
     public async Task<IAsyncDisposable> StartAsync(CancellationToken token = default)
@@ -56,14 +56,14 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
         }
     }
 
-    public async Task ClickAsync(string selector, int steps = 100, TimeSpan? moveSpeed = null,
+    public async Task ClickAsync(string selector, int? steps = null, TimeSpan? moveSpeed = null,
         CancellationToken token = default)
     {
         var element = await _browser.FindElementAsync(selector, token);
         await ClickAsync(element, steps, moveSpeed, token);
     }
 
-    public async Task ClickAsync(TElement element, int steps = 100, TimeSpan? moveSpeed = null,
+    public async Task ClickAsync(TElement element, int? steps = null, TimeSpan? moveSpeed = null,
         CancellationToken token = default)
     {
         ValidateStarted();
@@ -87,15 +87,17 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
         await _browser.ClickAsync(element, end, 50, token);
     }
 
-    private async Task MoveAsync(Vector2 end, int steps = 100, TimeSpan? moveSpeed = null,
+    private async Task MoveAsync(Vector2 end, int? steps = null, TimeSpan? moveSpeed = null,
         CancellationToken token = default)
     {
+        steps ??= _options.DefaultSteps;
+
         var bezier = VectorUtils.BezierCurve(_random, _cursor, end);
         var moveTime = moveSpeed ?? GetMoveSpeed(_cursor, end);
-        var delay = TimeSpan.FromMilliseconds(moveTime.TotalMilliseconds / steps);
+        var delay = TimeSpan.FromMilliseconds(moveTime.TotalMilliseconds / steps.Value);
 
         // Create debug point
-        if (_debug)
+        if (_options.Debug)
         {
             await _browser.ExecuteJsAsync(
                 $$"""
@@ -109,9 +111,9 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
                       point.style.top = '{{_cursor.Y}}px';
                       point.style.left = '{{_cursor.X}}px';
                       point.style.zIndex = '99999999';
-                  
+
                       document.body.appendChild(point);
-                      
+
                       window.debugPoint = point;
                   })();
                   """, token);
@@ -119,7 +121,7 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
 
         var currentDelay = TimeSpan.Zero;
 
-        for (var i = 0; i < steps; i++)
+        for (var i = 0; i < steps.Value; i++)
         {
             if (token.IsCancellationRequested)
             {
@@ -138,7 +140,7 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
                 currentDelay = TimeSpan.Zero;
             }
 
-            if (_debug)
+            if (_options.Debug)
             {
                 await _browser.ExecuteJsAsync(
                     $$"""
@@ -152,7 +154,7 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
 
         await Task.Delay(_random.Next(200, 250), token);
 
-        if (_debug)
+        if (_options.Debug)
         {
             await _browser.ExecuteJsAsync(
                 """

@@ -27,13 +27,13 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
             $$"""
               (function() {
                   const element = {{ToJavaScript(element)}};
-                  
+
                   if (!element) {
                       return "null";
                   }
-                  
+
                   const rect = element.getBoundingClientRect();
-                  
+
                   return JSON.stringify({
                       x: rect.x,
                       y: rect.y,
@@ -69,19 +69,19 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
     public abstract Task ScrollToAsync(Vector2 point, Random random, TElement element,
         CancellationToken token = default);
 
-    public async Task<bool> IsInViewportAsync(TElement element, CancellationToken token = default)
+    public virtual async Task<bool> IsInViewportAsync(TElement element, CancellationToken token = default)
     {
         var script =
             $$"""
               (function() {
                   const element = {{ToJavaScript(element)}};
-                  
+
                   if (!element) {
                       return "false";
                   }
-                  
+
                   const rect = element.getBoundingClientRect();
-              
+
                   return (
                       rect.top >= 0 &&
                       rect.left >= 0 &&
@@ -96,7 +96,7 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
         return json.ToString() == "true";
     }
 
-    public async Task<Size> GetViewportAsync(CancellationToken token = default)
+    public virtual async Task<Size> GetViewportAsync(CancellationToken token = default)
     {
         var script =
             """
@@ -116,31 +116,31 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
 
     public abstract Task ClickAsync(TElement element, Vector2 point, int delay = 50, CancellationToken token = default);
 
-    public async Task<bool> IsClickableAsync(TElement element, Vector2 point, CancellationToken token = default)
+    public virtual async Task<bool> IsClickableAsync(TElement element, Vector2 point, CancellationToken token = default)
     {
         var script =
             $$"""
               (function() {
                   const element = {{ToJavaScript(element)}};
-                  
+
                   if (!element) {
                       return "null";
                   }
-                  
+
                   const elementAtPoint = document.elementFromPoint({{(int)point.X}}, {{(int)point.Y}});
-                  
+
                   let current = elementAtPoint;
-                  
+
                   while (current) {
                       if (current === element) {
                           return JSON.stringify({
                               value: true
                           });
                       }
-                      
+
                       current = current.parentElement;
                   }
-                  
+
                   return JSON.stringify({
                       value: false
                   });
@@ -157,36 +157,68 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
 
     public abstract Task TypeAsync(Random random, string text, CancellationToken token = default);
 
-    public async Task<TElement> GetClickableElementAsync(TElement element, CancellationToken token = default)
+    public virtual async Task<TElement> GetClickableElementAsync(TElement element, CancellationToken token = default)
     {
         var script =
             $$"""
               (function() {
                   const element = {{ToJavaScript(element)}};
-                  
+
                   if (!element) {
                       return "null";
                   }
-                  
+
+                  function getSelector(elm) {
+                      if (elm.tagName === "BODY") return "BODY";
+
+                      const names = [];
+                      while (elm.parentElement && elm.tagName !== "BODY") {
+                          if (elm.id) {
+                              names.unshift("#" + elm.getAttribute("id"));
+                              break;
+                          } else {
+                              let c = 1, e = elm;
+                              for (; e.previousElementSibling; e = e.previousElementSibling, c++) ;
+                              names.unshift(elm.tagName + ":nth-child(" + c + ")");
+                          }
+                          elm = elm.parentElement;
+                      }
+                      return names.join(">");
+                  }
+
                   function getAlternativeElement() {
                       const selector = `label[for='${element.id}']`;
                       const label = document.querySelector(selector);
-                      
-                      return label ? selector : "null";
+
+                      if (label) {
+                        return selector;
+                      }
+
+                      let current = element.parentElement;
+
+                      while (current) {
+                          if (current.tagName === 'LABEL') {
+                              return getSelector(current);
+                          }
+
+                          current = current.parentElement;
+                      }
+
+                      return "null";
                   }
-                  
+
                   const style = window.getComputedStyle(element);
-                  
+
                   if (style.display === 'none' || style.visibility === 'hidden') {
                       return getAlternativeElement();
                   }
-              
+
                   const rect = element.getBoundingClientRect();
-              
+
                   if (rect.height === 0 || rect.width === 0) {
                       return getAlternativeElement();
                   }
-                  
+
                   return "null";
               })();
               """;
@@ -198,5 +230,18 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
             "null" => element,
             { } selector => await FindElementAsync(selector, token),
         };
+    }
+}
+
+public abstract class BrowserBase : BrowserBase<BrowserElement>
+{
+    protected override string ToJavaScript(BrowserElement element)
+    {
+        return element.Script;
+    }
+
+    public override Task<BrowserElement> FindElementAsync(string selector, CancellationToken token = default)
+    {
+        return Task.FromResult(BrowserElement.FromSelector(selector));
     }
 }

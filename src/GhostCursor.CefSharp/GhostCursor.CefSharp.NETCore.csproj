@@ -11,7 +11,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>12</LangVersion>
-        <RootNamespace>GhostCursor</RootNamespace>
+        <RootNamespace>GhostCursor.CefSharp</RootNamespace>
         <PlatformTarget>AnyCPU</PlatformTarget>
         <CefSharpBuildAction>NoAction</CefSharpBuildAction>
     </PropertyGroup>

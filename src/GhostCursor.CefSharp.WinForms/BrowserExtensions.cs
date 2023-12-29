@@ -1,13 +1,12 @@
 ﻿using CefSharp.WinForms;
 using GhostCursor;
 
-namespace Sandbox;
+namespace GhostCursor.CefSharp;
 
 public static class BrowserExtensions
 {
-    public static ICursor<CefElement> CreateCursor(this ChromiumWebBrowser browser, Random? random = null,
-        bool debug = false)
+    public static ICursor<BrowserElement> CreateCursor(this ChromiumWebBrowser browser, CursorOptions? options = null)
     {
-        return new Cursor<CefBrowserImpl, CefElement>(new CefBrowserForm(browser), random, debug);
+        return new Cursor<CefBrowserForm, BrowserElement>(new CefBrowserForm(browser), options);
     }
 }

@@ -14,6 +14,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor.CefSharp.NETCor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor.CefSharp.WinForms.NETCore", "src\GhostCursor.CefSharp.WinForms\GhostCursor.CefSharp.WinForms.NETCore.csproj", "{3CCE1045-702C-419E-89A3-221E0003AD62}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor.PuppeteerSharp", "src\GhostCursor.PuppeteerSharp\GhostCursor.PuppeteerSharp.csproj", "{51B75C08-2688-4C34-B3E9-FFD1A9AA28E6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9962DEC4-AD3B-4035-97A7-D5862685CD0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor.PuppeteerSharp.Tests", "tests\GhostCursor.PuppeteerSharp.Tests\GhostCursor.PuppeteerSharp.Tests.csproj", "{B01B7240-E2D3-42F1-85C4-09CD68FFC785}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,8 +50,17 @@ Global
 		{3CCE1045-702C-419E-89A3-221E0003AD62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CCE1045-702C-419E-89A3-221E0003AD62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CCE1045-702C-419E-89A3-221E0003AD62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51B75C08-2688-4C34-B3E9-FFD1A9AA28E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51B75C08-2688-4C34-B3E9-FFD1A9AA28E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51B75C08-2688-4C34-B3E9-FFD1A9AA28E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51B75C08-2688-4C34-B3E9-FFD1A9AA28E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B01B7240-E2D3-42F1-85C4-09CD68FFC785}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B01B7240-E2D3-42F1-85C4-09CD68FFC785}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B01B7240-E2D3-42F1-85C4-09CD68FFC785}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B01B7240-E2D3-42F1-85C4-09CD68FFC785}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{953B3B5C-C23B-48EF-90B9-03B9369A565E} = {404BB556-6F52-4AAA-AC59-B0FCEF70EE3F}
+		{B01B7240-E2D3-42F1-85C4-09CD68FFC785} = {9962DEC4-AD3B-4035-97A7-D5862685CD0B}
 	EndGlobalSection
 EndGlobal

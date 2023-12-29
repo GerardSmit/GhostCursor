@@ -30,7 +30,7 @@ public interface ICursor
     /// <exception cref="CursorElementNotFoundException">Thrown when the element is not found.</exception>
     /// <exception cref="CursorElementNotVisibleException">Thrown when the element is not visible.</exception>
     /// <exception cref="CursorNotStartedException">Thrown when the cursor is not started.</exception>
-    Task ClickAsync(string selector, int steps = 100, TimeSpan? moveSpeed = null, CancellationToken token = default);
+    Task ClickAsync(string selector, int? steps = null, TimeSpan? moveSpeed = null, CancellationToken token = default);
 
     /// <summary>
     /// Types the specified input.
@@ -54,5 +54,5 @@ public interface ICursor<in TElement> : ICursor
     /// <exception cref="CursorElementNotFoundException">Thrown when the element is not found.</exception>
     /// <exception cref="CursorElementNotVisibleException">Thrown when the element is not visible.</exception>
     /// <exception cref="CursorNotStartedException">Thrown when the cursor is not started.</exception>
-    Task ClickAsync(TElement element, int steps = 100, TimeSpan? moveSpeed = null, CancellationToken token = default);
+    Task ClickAsync(TElement element, int? steps = null, TimeSpan? moveSpeed = null, CancellationToken token = default);
 }
