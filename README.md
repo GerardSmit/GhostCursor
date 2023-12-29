@@ -15,7 +15,7 @@ When trying to click an element, the library checks if:
 
 1. The element is in the DOM, if not, throws `CursorElementNotFoundException`
 2. The element is in the viewport, if not, it scrolls to the element.
-3. The element is visible (e.g. the display is not set to none), if not, throws `CursorElementNotVisibleException` (optional
+3. The element is visible (e.g. the display is not set to none), if not, throws `CursorElementNotVisibleException`
 4. The element is clickable (e.g. there is no popup blocking the element), if not, throws `CursorElementNotClickableException`.
 
 ![GhostCursor in action](https://i.imgur.com/GyBTYvL.gif)
