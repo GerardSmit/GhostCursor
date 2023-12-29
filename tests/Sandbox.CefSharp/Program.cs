@@ -1,4 +1,6 @@
-﻿using CefSharp;
+﻿using System;
+using System.Windows.Forms;
+using CefSharp;
 using CefSharp.WinForms;
 using HttpStack;
 using HttpStack.CefSharp;
@@ -22,7 +24,7 @@ static class Program
         };
 
         var app = new HttpStackBuilder();
-        var provider = new EmbeddedFileProvider(typeof(DefaultForm).Assembly, "Sandbox.wwwroot");
+        var provider = new EmbeddedFileProvider(typeof(DefaultForm).Assembly, "Sandbox.CefSharp.wwwroot");
 
         app.UseStaticFiles(provider);
 

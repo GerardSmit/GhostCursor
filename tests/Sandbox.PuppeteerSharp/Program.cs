@@ -1,15 +1,3 @@
-# Ghost Cursor for .NET
-Simple port of [Ghost Cursor](https://github.com/Xetera/ghost-cursor/) to .NET.
-
-## Installation
-Install one of the following NuGet packages:
-
-- For PuppeteerSharp: [`GhostCursor.PuppeteerSharp`](https://www.nuget.org/packages/GhostCursor.PuppeteerSharp/)
-- For CefSharp WinForms in .NET Framework: [`GhostCursor.CefSharp.WinForms`](https://www.nuget.org/packages/GhostCursor.CefSharp.WinForms/)
-- For CefSharp WinForms in .NET (Core): [`GhostCursor.CefSharp.WinForms.NetCore`](https://www.nuget.org/packages/GhostCursor.CefSharp.WinForms.NETCore/)
-
-### Example in PuppeteerSharp
-```csharp
 using System.Threading.Tasks;
 using GhostCursor;
 using GhostCursor.PuppeteerSharp;
@@ -47,6 +35,3 @@ await using (await cursor.StartAsync())
 
 // Wait for 2 seconds before closing the browser
 await Task.Delay(2000);
-```
-
-![GhostCursor in action](https://i.imgur.com/1ssHq7C.gif)

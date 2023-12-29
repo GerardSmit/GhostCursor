@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor.CefSharp", "src
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sandbox", "Sandbox", "{404BB556-6F52-4AAA-AC59-B0FCEF70EE3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "tests\Sandbox\Sandbox.csproj", "{953B3B5C-C23B-48EF-90B9-03B9369A565E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox.CefSharp", "tests\Sandbox.CefSharp\Sandbox.CefSharp.csproj", "{953B3B5C-C23B-48EF-90B9-03B9369A565E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor.CefSharp.WinForms", "src\GhostCursor.CefSharp.WinForms\GhostCursor.CefSharp.WinForms.csproj", "{12667B05-5DF9-452C-A7AE-8FA9285BB701}"
 EndProject
@@ -19,6 +19,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9962DEC4-AD3B-4035-97A7-D5862685CD0B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor.PuppeteerSharp.Tests", "tests\GhostCursor.PuppeteerSharp.Tests\GhostCursor.PuppeteerSharp.Tests.csproj", "{B01B7240-E2D3-42F1-85C4-09CD68FFC785}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox.PuppeteerSharp", "tests\Sandbox.PuppeteerSharp\Sandbox.PuppeteerSharp.csproj", "{A6753EE3-CC21-493F-A3F4-067899E4043F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,9 +60,14 @@ Global
 		{B01B7240-E2D3-42F1-85C4-09CD68FFC785}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B01B7240-E2D3-42F1-85C4-09CD68FFC785}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B01B7240-E2D3-42F1-85C4-09CD68FFC785}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6753EE3-CC21-493F-A3F4-067899E4043F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6753EE3-CC21-493F-A3F4-067899E4043F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6753EE3-CC21-493F-A3F4-067899E4043F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6753EE3-CC21-493F-A3F4-067899E4043F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{953B3B5C-C23B-48EF-90B9-03B9369A565E} = {404BB556-6F52-4AAA-AC59-B0FCEF70EE3F}
 		{B01B7240-E2D3-42F1-85C4-09CD68FFC785} = {9962DEC4-AD3B-4035-97A7-D5862685CD0B}
+		{A6753EE3-CC21-493F-A3F4-067899E4043F} = {404BB556-6F52-4AAA-AC59-B0FCEF70EE3F}
 	EndGlobalSection
 EndGlobal
