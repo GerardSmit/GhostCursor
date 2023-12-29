@@ -7,7 +7,7 @@ using HttpStack.CefSharp;
 using HttpStack.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 
-namespace Sandbox;
+namespace Sandbox.CefSharp;
 
 static class Program
 {

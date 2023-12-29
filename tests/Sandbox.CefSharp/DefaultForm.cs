@@ -6,7 +6,7 @@ using CefSharp.WinForms;
 using GhostCursor;
 using GhostCursor.CefSharp;
 
-namespace Sandbox;
+namespace Sandbox.CefSharp;
 
 public class DefaultForm : Form
 {
