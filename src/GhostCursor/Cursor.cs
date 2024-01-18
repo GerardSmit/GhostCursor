@@ -92,7 +92,7 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
         }
 
         await MoveAsync(end, steps, moveSpeed, token);
-        await _browser.ClickAsync(element, end, 50, token);
+        await _browser.ClickAsync(end, 50, token);
     }
 
     private async Task MoveAsync(Vector2 end, int? steps = null, TimeSpan? moveSpeed = null,
@@ -153,8 +153,8 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
                 await _browser.EvaluateExpressionAsync(
                     $$"""
                       (function() {
-                          window.debugPoint.style.left = '{{point.X}}px';
-                          window.debugPoint.style.top = '{{point.Y}}px';
+                          window.debugPoint.style.left = '{{(int)point.X}}px';
+                          window.debugPoint.style.top = '{{(int)point.Y}}px';
                       })();
                       """, token);
             }
@@ -201,5 +201,21 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
 
         await _browser.TypeAsync(_random, input, token);
         await Task.Delay(_random.Next(200, 250), token);
+    }
+
+    public Task ClickAsync(CancellationToken token = default)
+    {
+        return _browser.ClickAsync(_cursor, token: token);
+    }
+
+    public async Task ClickAsync(int x, int y, CancellationToken token = default)
+    {
+        await MoveToAsync(x, y, token: token);
+        await ClickAsync(token);
+    }
+
+    public Task MoveToAsync(int x, int y, int? steps = null, TimeSpan? moveSpeed = null, CancellationToken token = default)
+    {
+        return MoveAsync(new Vector2(x, y), steps, moveSpeed, token);
     }
 }

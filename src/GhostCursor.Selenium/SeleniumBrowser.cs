@@ -111,7 +111,7 @@ public class SeleniumBrowser(IWebDriver driver) : IBrowser<IWebElement>
         return Task.FromResult(_executor.ExecuteScript($"return {script}"));
     }
 
-    public Task ClickAsync(IWebElement element, Vector2 point, int delay = 50, CancellationToken token = default)
+    public Task ClickAsync(Vector2 point, int delay = 50, CancellationToken token = default)
     {
         new Actions(driver, TimeSpan.Zero)
             .MoveToLocation((int)point.X, (int)point.Y)

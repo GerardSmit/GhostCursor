@@ -81,7 +81,7 @@ public class PuppeteerBrowser(IPage page) : IBrowser<IElementHandle>
         return result?.ToString() ?? "null";
     }
 
-    public Task ClickAsync(IElementHandle element, Vector2 point, int delay = 50, CancellationToken token = default)
+    public Task ClickAsync(Vector2 point, int delay = 50, CancellationToken token = default)
     {
         return page.Mouse.ClickAsync((int)point.X, (int)point.Y, new ClickOptions
         {

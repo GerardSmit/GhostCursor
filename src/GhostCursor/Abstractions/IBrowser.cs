@@ -24,7 +24,7 @@ public interface IBrowser<TElement>
 
     Task<object> EvaluateExpressionAsync(string script, CancellationToken token = default);
 
-    Task ClickAsync(TElement element, Vector2 point, int delay = 50, CancellationToken token = default);
+    Task ClickAsync(Vector2 point, int delay = 50, CancellationToken token = default);
 
     Task<bool> IsClickableAsync(TElement element, Vector2 point, CancellationToken token = default);
 

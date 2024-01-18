@@ -52,6 +52,33 @@ public interface ICursor
     /// <param name="token">The cancellation token.</param>
     /// <returns>Returns a task that completes when the type is complete.</returns>
     Task TypeAsync(string input, CancellationToken token = default);
+
+    /// <summary>
+    /// Click the cursor at the current position.
+    /// </summary>
+    /// <param name="token">The cancellation token.</param>
+    /// <returns>Returns a task that completes when the click is complete.</returns>
+    Task ClickAsync(CancellationToken token = default);
+
+    /// <summary>
+    /// Clicks the cursor at the specified coordinates.
+    /// </summary>
+    /// <param name="x">The x-coordinate.</param>
+    /// <param name="y">The y-coordinate.</param>
+    /// <param name="token">The cancellation token.</param>
+    /// <returns>Returns a task that completes when the click is complete.</returns>
+    Task ClickAsync(int x, int y, CancellationToken token = default);
+
+    /// <summary>
+    /// Moves the cursor to the coordinates.
+    /// </summary>
+    /// <param name="x">The x-coordinate.</param>
+    /// <param name="y">The y-coordinate.</param>
+    /// <param name="steps">The number of steps to move the cursor.</param>
+    /// <param name="moveSpeed">The speed to move the cursor.</param>
+    /// <param name="token">The cancellation token.</param>
+    /// <returns>Returns a task that completes when the move is complete.</returns>
+    Task MoveToAsync(int x, int y, int? steps = null, TimeSpan? moveSpeed = null, CancellationToken token = default);
 }
 
 public interface ICursor<TElement> : ICursor

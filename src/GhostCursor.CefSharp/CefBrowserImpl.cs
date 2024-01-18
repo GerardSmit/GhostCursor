@@ -31,7 +31,7 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase
         return response.Result;
     }
 
-    public override async Task ClickAsync(ElementSelector selector, Vector2 point, int delay = 50,
+    public override async Task ClickAsync(Vector2 point, int delay = 50,
         CancellationToken token = default)
     {
         var host = browser.GetBrowser().GetHost();

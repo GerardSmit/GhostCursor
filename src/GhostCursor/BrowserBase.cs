@@ -73,7 +73,7 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
 
     public abstract Task<object> EvaluateExpressionAsync(string script, CancellationToken token = default);
 
-    public abstract Task ClickAsync(TElement element, Vector2 point, int delay = 50, CancellationToken token = default);
+    public abstract Task ClickAsync(Vector2 point, int delay = 50, CancellationToken token = default);
 
     public virtual async Task<bool> IsClickableAsync(TElement element, Vector2 point, CancellationToken token = default)
     {
