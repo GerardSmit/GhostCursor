@@ -28,7 +28,7 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
     {
         var script = $"{JsMethods.ElementGetBoundingBox}({ToJavaScript(element)})";
         var json = await EvaluateExpressionAsync(script, token);
-        var nullable = JsonSerializer.Deserialize(json.ToString()!, JsJsonContext.Default.NullableJsBoundingBox);
+        var nullable = JsBoundingBox.FromJson(json);
 
         if (nullable is not { } result)
         {

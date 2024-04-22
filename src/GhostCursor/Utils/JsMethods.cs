@@ -21,6 +21,17 @@ public static class JsMethods
 
             const rect = element.getBoundingClientRect();
 
+            if (window.frameElement) {
+                const frameRect = window.frameElement.getBoundingClientRect();
+
+                return (
+                    rect.top >= frameRect.top &&
+                    rect.left >= frameRect.left &&
+                    rect.bottom <= frameRect.bottom &&
+                    rect.right <= frameRect.right
+                );
+            }
+
             return (
                 rect.top >= 0 &&
                 rect.left >= 0 &&
@@ -53,6 +64,13 @@ public static class JsMethods
     public const string ElementIsClickable =
         """
         ((element, x, y) => {
+            if (window.frameElement) {
+                const rect = window.frameElement.getBoundingClientRect();
+
+                x -= rect.left;
+                y -= rect.top;
+            }
+
             const elementAtPoint = document.elementFromPoint(x, y);
 
             let current = elementAtPoint;

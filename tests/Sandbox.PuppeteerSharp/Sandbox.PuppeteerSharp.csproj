@@ -10,4 +10,10 @@
         <ProjectReference Include="..\..\src\GhostCursor.PuppeteerSharp\GhostCursor.PuppeteerSharp.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="test\*.html">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

@@ -1,18 +1,25 @@
+using System.IO;
 using System.Threading.Tasks;
 using GhostCursor;
 using GhostCursor.PuppeteerSharp;
 using PuppeteerSharp;
 
 // Initialize PuppeteerSharp
+var path = Path.Combine(Directory.GetCurrentDirectory(), "test", "main.html");
+
 using var browserFetcher = new BrowserFetcher();
 await browserFetcher.DownloadAsync();
 await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
 {
-    Headless = false
+    Headless = false,
+    Args = [
+        "--disable-web-security",
+        "--disable-features=IsolateOrigins,site-per-process"
+    ]
 });
 
 await using var page = await browser.NewPageAsync();
-await page.GoToAsync("https://www.google.com/?hl=en");
+await page.GoToAsync("file://" + path);
 
 // Create the cursor
 var options = new CursorOptions
@@ -21,16 +28,24 @@ var options = new CursorOptions
     DefaultSteps = 20
 };
 
-var cursor = page.CreateCursor(options);
-
-// Search for "Hello world" with the cursor
-await using (await cursor.StartAsync())
+// Find the frame and fill in the username
+foreach (var frame in page.Frames)
 {
-    await cursor.ClickAsync(ElementSelector.FromXPath("//div[text() = 'Reject all']"));
-    await cursor.ClickAsync("[title='Search']");
-    await cursor.TypeAsync("Hello world");
-    await cursor.ClickAsync("input[value='Google Search']");
-    await page.WaitForNavigationAsync();
+    var element = await frame.QuerySelectorAsync("#username");
+
+    if (element is null)
+    {
+        continue;
+    }
+
+    // Fill in the username
+    var cursor = frame.CreateCursor(options);
+
+    await using (await cursor.StartAsync())
+    {
+        await cursor.ClickAsync(element);
+        await cursor.TypeAsync("Username");
+    }
 }
 
 // Wait for 2 seconds before closing the browser
