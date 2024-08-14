@@ -17,14 +17,31 @@ public abstract class PuppeteerBrowserBase : IBrowser<IElementHandle>
 
     public abstract Task<IElementHandle> FindElementAsync(string selector, CancellationToken token = default);
 
+    public Task<bool> IsInViewportAsync(BoundingBox boundingBox, CancellationToken token = default)
+    {
+        FormattableString script = $"{JsMethods.ElementInViewPort}({{top: {boundingBox.Min.Y}, left: {boundingBox.Min.X}, bottom: {boundingBox.Max.Y}, right: {boundingBox.Max.X}}})";
+
+        return EvaluateExpressionAsync<bool>(FormattableString.Invariant(script));
+    }
+
     public Task<bool> IsInViewportAsync(IElementHandle element, CancellationToken token = default)
     {
         return EvaluateFunctionAsync<bool>(JsMethods.ElementInViewPort, element);
     }
 
-    public virtual Task<Size> GetViewportAsync(CancellationToken token = default)
+    public virtual Task<Vector2> GetViewportAsync(CancellationToken token = default)
     {
-        return Task.FromResult(new Size(Page.Viewport.Width, Page.Viewport.Height));
+        return Task.FromResult(new Vector2(Page.Viewport.Width, Page.Viewport.Height));
+    }
+
+    public Task<Vector2> GetScrollAsync(CancellationToken token = default)
+    {
+        return BrowserUtils.GetScrollAsync(this, token);
+    }
+
+    public Task SetScrollAsync(Vector2 vector2, CancellationToken token = default)
+    {
+        return BrowserUtils.SetScrollAsync(this, vector2, token);
     }
 
     public async Task<IElementHandle> FindElementAsync(ElementSelector selector, CancellationToken token = default)
@@ -72,9 +89,14 @@ public abstract class PuppeteerBrowserBase : IBrowser<IElementHandle>
         return Page.Mouse.MoveAsync((int)point.X, (int)point.Y);
     }
 
+    public async Task ScrollToAsync(Vector2 point, Random random, BoundingBox boundingBox, CancellationToken token = default)
+    {
+        await MouseUtils.ScrollDeltaAsync(random, this, boundingBox, deltaY => Page.Mouse.WheelAsync(0, (decimal)(deltaY * -1)), token);
+    }
+
     public virtual async Task ScrollToAsync(Vector2 point, Random random, IElementHandle element, CancellationToken token = default)
     {
-        await MouseUtils.ScrollDeltaAsync(random, this, element, deltaY => Page.Mouse.WheelAsync(0, deltaY * -1), token);
+        await MouseUtils.ScrollDeltaAsync(random, this, element, deltaY => Page.Mouse.WheelAsync(0, (decimal)(deltaY * -1)), token);
     }
 
     public abstract Task<object> EvaluateExpressionAsync(string script, CancellationToken token = default);

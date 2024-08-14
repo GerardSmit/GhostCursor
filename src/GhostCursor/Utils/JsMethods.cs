@@ -12,6 +12,23 @@ public static class JsMethods
         """;
 
     //language=js
+    public const string WindowScrollAsJsonObject =
+        """
+        JSON.stringify({
+            x: window.scrollX || window.pageXOffset,
+            y: window.scrollY || window.pageYOffset
+        })
+        """;
+
+    //language=js
+    public const string SetWindowScroll =
+        """
+        (({x, y}) => {
+            window.scrollTo(x, y);
+        })
+        """;
+
+    //language=js
     public const string ElementInViewPort =
         """
         ((element) => {
@@ -19,7 +36,9 @@ public static class JsMethods
                 return false;
             }
 
-            const rect = element.getBoundingClientRect();
+            const rect = element instanceof Element
+                ? element.getBoundingClientRect()
+                : element;
 
             if (window.frameElement) {
                 const frameRect = window.frameElement.getBoundingClientRect();

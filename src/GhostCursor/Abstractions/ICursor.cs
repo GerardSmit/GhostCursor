@@ -1,3 +1,6 @@
+using System.Geometry;
+using System.Numerics;
+
 namespace GhostCursor;
 
 public interface ICursor
@@ -76,9 +79,45 @@ public interface ICursor
     /// <param name="y">The y-coordinate.</param>
     /// <param name="steps">The number of steps to move the cursor.</param>
     /// <param name="moveSpeed">The speed to move the cursor.</param>
+    /// <param name="type">The position type.</param>
     /// <param name="token">The cancellation token.</param>
     /// <returns>Returns a task that completes when the move is complete.</returns>
-    Task MoveToAsync(int x, int y, int? steps = null, TimeSpan? moveSpeed = null, CancellationToken token = default);
+    Task MoveToAsync(int x, int y, int? steps = null, TimeSpan? moveSpeed = null, PositionType type = PositionType.Absolute, CancellationToken token = default);
+
+    /// <summary>
+    /// Moves the cursor to the coordinates.
+    /// </summary>
+    /// <param name="position">The position to move the cursor to.</param>
+    /// <param name="steps">The number of steps to move the cursor.</param>
+    /// <param name="moveSpeed">The speed to move the cursor.</param>
+    /// <param name="type">The position type.</param>
+    /// <param name="token">The cancellation token.</param>
+    /// <returns>Returns a task that completes when the move is complete.</returns>
+    Task MoveToAsync(Vector2 position, int? steps = null, TimeSpan? moveSpeed = null, PositionType type = PositionType.Absolute, CancellationToken token = default);
+
+    /// <summary>
+    /// Moves the cursor to a random position within the bounding box.
+    /// </summary>
+    /// <param name="boundingBox">The bounding box to move the cursor to.</param>
+    /// <param name="steps">The number of steps to move the cursor.</param>
+    /// <param name="moveSpeed">The speed to move the cursor.</param>
+    /// <param name="type">The position type.</param>
+    /// <param name="token">The cancellation token.</param>
+    /// <returns>Returns a point that represents the end position of the cursor.</returns>
+    Task<Vector2> MoveToAsync(BoundingBox boundingBox, int? steps = null, TimeSpan? moveSpeed = null, PositionType type = PositionType.Absolute, CancellationToken token = default);
+}
+
+public enum PositionType
+{
+    /// <summary>
+    /// The position is relative to the current scroll position.
+    /// </summary>
+    Relative,
+
+    /// <summary>
+    /// The position is absolute to the page.
+    /// </summary>
+    Absolute
 }
 
 public interface ICursor<TElement> : ICursor

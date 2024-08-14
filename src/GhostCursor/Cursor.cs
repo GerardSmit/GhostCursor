@@ -1,4 +1,4 @@
-﻿using System.Geometry;
+using System.Geometry;
 using System.Numerics;
 using GhostCursor.Utils;
 
@@ -47,7 +47,7 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
 
         _isStarted = false;
         var end = await _browser.GetCursorAsync(token);
-        await MoveAsync(end, token: token);
+        await MoveToAsync(end, token: token);
         await _browser.AllowInputAsync(true, token);
     }
 
@@ -59,8 +59,7 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
         }
     }
 
-    public async Task ClickAsync(string selector, int? steps = null, TimeSpan? moveSpeed = null,
-        CancellationToken token = default)
+    public async Task ClickAsync(string selector, int? steps = null, TimeSpan? moveSpeed = null, CancellationToken token = default)
     {
         var element = await _browser.FindElementAsync(selector, token);
         await ClickAsync(element, steps, moveSpeed, token);
@@ -71,35 +70,48 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
         await ClickAsync(await _browser.FindElementAsync(selector, token), steps, moveSpeed, token);
     }
 
-    public async Task ClickAsync(TElement element, int? steps = null, TimeSpan? moveSpeed = null,
-        CancellationToken token = default)
+    public async Task ClickAsync(TElement element, int? steps = null, TimeSpan? moveSpeed = null, CancellationToken token = default)
     {
         ValidateStarted();
 
-        element = await _browser.GetClickableElementAsync(element, token);
-
-        if (!await _browser.IsInViewportAsync(element, token))
+        for (int i = 0; i < 5; i++)
         {
-            await _browser.ScrollToAsync(_cursor, _random, element, token);
+            element = await _browser.GetClickableElementAsync(element, token);
+
+            if (!await _browser.IsInViewportAsync(element, token))
+            {
+                await _browser.ScrollToAsync(_cursor, _random, element, token);
+            }
+
+            var boundingBox = await _browser.GetBoundingBox(element, token);
+            var end = await MoveToAsync(boundingBox, steps, moveSpeed, PositionType.Relative, token);
+
+            if (!await _browser.IsClickableAsync(element, end, token))
+            {
+                continue;
+            }
+
+            await _browser.ClickAsync(end, 50, token);
+            return;
         }
 
-        var boundingBox = await _browser.GetBoundingBox(element, token);
-        var end = await GetRandomPointAsync(boundingBox);
-
-        if (!await _browser.IsClickableAsync(element, end, token))
-        {
-            throw new CursorElementNotClickableException($"Element '{element}' not clickable.");
-        }
-
-        await MoveAsync(end, steps, moveSpeed, token);
-        await _browser.ClickAsync(end, 50, token);
+        throw new CursorElementNotClickableException($"Element '{element}' not clickable.");
     }
 
-    private async Task MoveAsync(Vector2 end, int? steps = null, TimeSpan? moveSpeed = null,
-        CancellationToken token = default)
+    public async Task<Vector2> MoveToAsync(BoundingBox boundingBox, int? steps = null, TimeSpan? moveSpeed = null, PositionType type = PositionType.Absolute, CancellationToken token = default)
     {
         steps ??= _options.DefaultSteps;
 
+        var relativeBoundingBox = await ToRelativeBoundingBox(boundingBox, type, token);
+
+        if (!await _browser.IsInViewportAsync(relativeBoundingBox, token))
+        {
+            await _browser.ScrollToAsync(_cursor, _random, relativeBoundingBox, token);
+        }
+
+        relativeBoundingBox = await ToRelativeBoundingBox(boundingBox, type, token);
+
+        var end = await GetRandomPointAsync(relativeBoundingBox);
         var bezier = VectorUtils.BezierCurve(_random, _cursor, end);
         var moveTime = moveSpeed ?? GetMoveSpeed(_cursor, end);
         var delay = TimeSpan.FromMilliseconds(moveTime.TotalMilliseconds / steps.Value);
@@ -160,6 +172,19 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
             }
         }
 
+        await _browser.MoveCursorToAsync(end, token);
+
+        if (_options.Debug)
+        {
+            await _browser.EvaluateExpressionAsync(
+                $$"""
+                  (function() {
+                      window.debugPoint.style.left = '{{(int)end.X}}px';
+                      window.debugPoint.style.top = '{{(int)end.Y}}px';
+                  })();
+                  """, token);
+        }
+
         await Task.Delay(_random.Next(200, 250), token);
 
         if (_options.Debug)
@@ -172,9 +197,38 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
                 })();
                 """, token);
         }
+
+        return end;
     }
 
-    private TimeSpan GetMoveSpeed(Vector2 cursor, Vector2 end)
+    private async Task<BoundingBox> ToRelativeBoundingBox(BoundingBox boundingBox, PositionType type, CancellationToken token)
+    {
+        if (type == PositionType.Relative)
+        {
+            return boundingBox;
+        }
+
+        var scroll = await _browser.GetScrollAsync(token);
+
+        return new BoundingBox(
+            new Vector2(boundingBox.Min.X - scroll.X, MathF.Ceiling(boundingBox.Min.Y - scroll.Y)),
+            new Vector2(boundingBox.Max.X - scroll.X, MathF.Ceiling(boundingBox.Max.Y - scroll.Y))
+        );
+    }
+
+    private async Task<Vector2> ToAbsolutePosition(Vector2 position, PositionType type, CancellationToken token)
+    {
+        if (type == PositionType.Absolute)
+        {
+            return position;
+        }
+
+        var scroll = await _browser.GetScrollAsync(token);
+
+        return new Vector2(position.X + scroll.X, position.Y + scroll.Y);
+    }
+
+    private static TimeSpan GetMoveSpeed(Vector2 cursor, Vector2 end)
     {
         var distance = Vector2.Distance(cursor, end);
 
@@ -184,10 +238,10 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
     private async Task<Vector2> GetRandomPointAsync(BoundingBox boundingBox)
     {
         var viewPort = await _browser.GetViewportAsync();
-        var minX = (int)boundingBox.Min.X + 5;
-        var maxX = (int)boundingBox.Max.X - 10;
-        var minY = Math.Max((int)boundingBox.Min.Y + 5, 0);
-        var maxY = Math.Min((int)boundingBox.Max.Y - 10, viewPort.Height - 10);
+        var minX = (int)Math.Max(boundingBox.Min.X, 0);
+        var minY = (int)Math.Max(boundingBox.Min.Y, 0);
+        var maxX = (int)Math.Min(boundingBox.Max.X, viewPort.X);
+        var maxY = (int)Math.Min(boundingBox.Max.Y, viewPort.Y);
 
         var x = maxX - minX <= 0 ? minX : _random.Next(minX, maxX);
         var y = maxY - minY <= 0 ? minY : _random.Next(minY, maxY);
@@ -214,8 +268,15 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
         await ClickAsync(token);
     }
 
-    public Task MoveToAsync(int x, int y, int? steps = null, TimeSpan? moveSpeed = null, CancellationToken token = default)
+    public Task MoveToAsync(int x, int y, int? steps = null, TimeSpan? moveSpeed = null, PositionType type = PositionType.Absolute, CancellationToken token = default)
     {
-        return MoveAsync(new Vector2(x, y), steps, moveSpeed, token);
+        return MoveToAsync(new Vector2(x, y), steps, moveSpeed, type, token);
+    }
+
+    public Task MoveToAsync(Vector2 position, int? steps = null, TimeSpan? moveSpeed = null, PositionType type = PositionType.Absolute, CancellationToken token = default)
+    {
+        var boundingBox = new BoundingBox(position, position);
+
+        return MoveToAsync(boundingBox, steps, moveSpeed, type, token);
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using CefSharp;
 using CefSharp.WinForms;
@@ -15,7 +15,7 @@ static class Program
     ///  The main entry point for the application.
     /// </summary>
     [STAThread]
-    static void Main()
+    private static void Main()
     {
         var settings = new CefSettings()
         {

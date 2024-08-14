@@ -12,6 +12,14 @@ public class SeleniumBrowser(IWebDriver driver) : IBrowser<IWebElement>
 {
     private readonly IJavaScriptExecutor _executor = (IJavaScriptExecutor)driver;
 
+    public Task<bool> IsInViewportAsync(BoundingBox boundingBox, CancellationToken token = default)
+    {
+        FormattableString script = $"return {JsMethods.ElementInViewPort}({{top: {boundingBox.Min.Y}, left: {boundingBox.Min.X}, bottom: {boundingBox.Max.Y}, right: {boundingBox.Max.X}}})";
+        var result = _executor.ExecuteScript(FormattableString.Invariant(script));
+
+        return Task.FromResult((bool)result);
+    }
+
     public Task<bool> IsInViewportAsync(IWebElement element, CancellationToken token = default)
     {
         var result = _executor.ExecuteScript($"return {JsMethods.ElementInViewPort}(arguments[0])", element);
@@ -19,9 +27,23 @@ public class SeleniumBrowser(IWebDriver driver) : IBrowser<IWebElement>
         return Task.FromResult((bool)result);
     }
 
-    public Task<Size> GetViewportAsync(CancellationToken token = default)
+    public Task<Vector2> GetViewportAsync(CancellationToken token = default)
     {
-        return Task.FromResult(driver.Manage().Window.Size);
+        var size = driver.Manage().Window.Size;
+        return Task.FromResult(new Vector2(size.Width, size.Height));
+    }
+
+    public Task<Vector2> GetScrollAsync(CancellationToken token = default)
+    {
+        var point = driver.Manage().Window.Position;
+
+        return Task.FromResult(new Vector2(point.X, point.Y));
+    }
+
+    public Task SetScrollAsync(Vector2 vector2, CancellationToken token = default)
+    {
+        driver.Manage().Window.Position = new Point((int)vector2.X, (int)vector2.Y);
+        return Task.CompletedTask;
     }
 
     public Task<IWebElement> FindElementAsync(string selector, CancellationToken token = default)
@@ -96,12 +118,20 @@ public class SeleniumBrowser(IWebDriver driver) : IBrowser<IWebElement>
 
         return Task.CompletedTask;
     }
+    public Task ScrollToAsync(Vector2 point, Random random, BoundingBox boundingBox, CancellationToken token = default)
+    {
+        return MouseUtils.ScrollDeltaAsync(random, this, boundingBox, deltaY =>
+        {
+            new Actions(driver, TimeSpan.Zero).ScrollByAmount(0, (int)deltaY).Perform();
+            return Task.CompletedTask;
+        }, token);
+    }
 
     public Task ScrollToAsync(Vector2 point, Random random, IWebElement element, CancellationToken token = default)
     {
         return MouseUtils.ScrollDeltaAsync(random, this, element, deltaY =>
         {
-            new Actions(driver, TimeSpan.Zero).ScrollByAmount(0, deltaY).Perform();
+            new Actions(driver, TimeSpan.Zero).ScrollByAmount(0, (int)deltaY).Perform();
             return Task.CompletedTask;
         }, token);
     }

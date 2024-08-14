@@ -50,8 +50,24 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
 
     public abstract Task MoveCursorToAsync(Vector2 point, CancellationToken token = default);
 
-    public abstract Task ScrollToAsync(Vector2 point, Random random, TElement element,
+    public abstract Task ScrollToAsync(Vector2 point, Random random, BoundingBox boundingBox,
         CancellationToken token = default);
+
+    public virtual async Task ScrollToAsync(Vector2 point, Random random, TElement element,
+        CancellationToken token = default)
+    {
+        var boundingBox = await GetBoundingBox(element, token);
+
+        await ScrollToAsync(point, random, boundingBox, token);
+    }
+
+    public async Task<bool> IsInViewportAsync(BoundingBox boundingBox, CancellationToken token = default)
+    {
+        FormattableString script = $"{JsMethods.ElementInViewPort}({{top: {boundingBox.Min.Y}, left: {boundingBox.Min.X}, bottom: {boundingBox.Max.Y}, right: {boundingBox.Max.X}}})";
+        var result = (bool) await EvaluateExpressionAsync(FormattableString.Invariant(script), token);
+
+        return result;
+    }
 
     public virtual async Task<bool> IsInViewportAsync(TElement element, CancellationToken token = default)
     {
@@ -61,14 +77,24 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
         return result;
     }
 
-    public virtual async Task<Size> GetViewportAsync(CancellationToken token = default)
+    public virtual async Task<Vector2> GetViewportAsync(CancellationToken token = default)
     {
         const string script = JsMethods.WindowSizeAsJsonObject;
 
         var json = await EvaluateExpressionAsync(script, token);
         var result = JsonSerializer.Deserialize(json.ToString()!, JsJsonContext.Default.JsViewport);
 
-        return new Size(result.Width, result.Height);
+        return new Vector2(result.Width, result.Height);
+    }
+
+    public virtual Task<Vector2> GetScrollAsync(CancellationToken token = default)
+    {
+        return BrowserUtils.GetScrollAsync(this, token);
+    }
+
+    public Task SetScrollAsync(Vector2 vector2, CancellationToken token = default)
+    {
+        return BrowserUtils.SetScrollAsync(this, vector2, token);
     }
 
     public abstract Task<object> EvaluateExpressionAsync(string script, CancellationToken token = default);

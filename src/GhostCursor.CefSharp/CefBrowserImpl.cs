@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Geometry;
+using System.Numerics;
 using CefSharp;
 using GhostCursor.Utils;
 
@@ -15,11 +16,11 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase
         return Task.CompletedTask;
     }
 
-    public override Task ScrollToAsync(Vector2 point, Random random, ElementSelector selector, CancellationToken token = default)
+    public override Task ScrollToAsync(Vector2 point, Random random, BoundingBox boundingBox, CancellationToken token = default)
     {
-        return MouseUtils.ScrollDeltaAsync(random, this, selector, (deltaY) =>
+        return MouseUtils.ScrollDeltaAsync(random, this, boundingBox, (deltaY) =>
         {
-            browser.SendMouseWheelEvent((int)point.X, (int)point.Y, 0, deltaY, CefEventFlags.None);
+            browser.SendMouseWheelEvent((int)point.X, (int)point.Y, 0, (int)deltaY, CefEventFlags.None);
             return Task.CompletedTask;
         }, token);
     }

@@ -1,5 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35209.166
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor", "src\GhostCursor\GhostCursor.csproj", "{40F3DE13-536D-40D1-9C87-274D410C6A36}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostCursor.CefSharp", "src\GhostCursor.CefSharp\GhostCursor.CefSharp.csproj", "{54BEC2FB-0157-4083-8ACD-FFCEC33AFFC0}"
@@ -40,8 +43,8 @@ Global
 		{54BEC2FB-0157-4083-8ACD-FFCEC33AFFC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54BEC2FB-0157-4083-8ACD-FFCEC33AFFC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54BEC2FB-0157-4083-8ACD-FFCEC33AFFC0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{953B3B5C-C23B-48EF-90B9-03B9369A565E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{953B3B5C-C23B-48EF-90B9-03B9369A565E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{953B3B5C-C23B-48EF-90B9-03B9369A565E}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{953B3B5C-C23B-48EF-90B9-03B9369A565E}.Debug|Any CPU.Build.0 = Debug|x64
 		{953B3B5C-C23B-48EF-90B9-03B9369A565E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{953B3B5C-C23B-48EF-90B9-03B9369A565E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{12667B05-5DF9-452C-A7AE-8FA9285BB701}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -76,6 +79,9 @@ Global
 		{D2320553-2F3C-4930-8C4C-6448662FB075}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2320553-2F3C-4930-8C4C-6448662FB075}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2320553-2F3C-4930-8C4C-6448662FB075}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{953B3B5C-C23B-48EF-90B9-03B9369A565E} = {404BB556-6F52-4AAA-AC59-B0FCEF70EE3F}

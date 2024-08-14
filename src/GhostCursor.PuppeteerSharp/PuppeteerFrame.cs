@@ -9,13 +9,13 @@ public class PuppeteerFrame(IFrame frame) : PuppeteerBrowserBase
 {
     protected override IPage Page => frame.Page;
 
-    public override async Task<Size> GetViewportAsync(CancellationToken token = default)
+    public override async Task<Vector2> GetViewportAsync(CancellationToken token = default)
     {
         var boundingBox = JsBoundingBox.FromJson(await frame.EvaluateExpressionAsync<string>($"{JsMethods.ElementGetBoundingBox}(window.frameElement)"));
 
         if (boundingBox.HasValue)
         {
-            return new Size((int)boundingBox.Value.Width, (int)boundingBox.Value.Height);
+            return new Vector2((int)boundingBox.Value.Width, (int)boundingBox.Value.Height);
         }
 
         return await base.GetViewportAsync(token);

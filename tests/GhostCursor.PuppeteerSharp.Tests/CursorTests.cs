@@ -61,4 +61,36 @@ public class CursorTests
         Assert.Equal("Input D", await page.EvaluateFunctionAsync<string>("x => x.value", await page.QuerySelectorAsync("#input-d")));
         Assert.Equal("Input E", await page.EvaluateFunctionAsync<string>("x => x.value", await page.QuerySelectorAsync("#input-e")));
     }
+
+    [Fact]
+    public async Task ExactMove()
+    {
+        // Arrange
+        using var browserFetcher = new BrowserFetcher();
+        await browserFetcher.DownloadAsync();
+        await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+        {
+            Headless = true
+        });
+
+        await using var page = await browser.NewPageAsync();
+        await page.GoToAsync("https://www.selenium.dev/selenium/web/mouse_interaction.html");
+
+        // Act
+        var options = new CursorOptions
+        {
+            Debug = true,
+            DefaultSteps = 20
+        };
+
+        var cursor = page.CreateCursor(options);
+
+        await using (await cursor.StartAsync())
+        {
+            await cursor.MoveToAsync(478, 743);
+
+            // Assert
+            Assert.Equal("478, 743", await page.EvaluateFunctionAsync<string>("x => x.innerText", await page.QuerySelectorAsync("#absolute-location")));
+        }
+    }
 }
