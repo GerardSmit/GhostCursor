@@ -21,4 +21,14 @@ public class BrowserUtils
 
         return browserBase.EvaluateExpressionAsync(FormattableString.Invariant(script), token);
     }
+
+    public static async Task<Vector2> GetViewportAsync(IBrowser browserBase, CancellationToken token = default)
+    {
+        const string script = JsMethods.WindowSizeAsJsonObject;
+
+        var json = await browserBase.EvaluateExpressionAsync(script, token);
+        var result = JsonSerializer.Deserialize(json.ToString()!, JsJsonContext.Default.JsViewport);
+
+        return new Vector2(result.Width, result.Height);
+    }
 }

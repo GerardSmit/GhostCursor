@@ -31,7 +31,9 @@ public abstract class PuppeteerBrowserBase : IBrowser<IElementHandle>
 
     public virtual Task<Vector2> GetViewportAsync(CancellationToken token = default)
     {
-        return Task.FromResult(new Vector2(Page.Viewport.Width, Page.Viewport.Height));
+        return Page.Viewport is null
+            ? BrowserUtils.GetViewportAsync(this, token)
+            : Task.FromResult(new Vector2(Page.Viewport.Width, Page.Viewport.Height));
     }
 
     public Task<Vector2> GetScrollAsync(CancellationToken token = default)

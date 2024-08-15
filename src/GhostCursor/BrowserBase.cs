@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Geometry;
 using System.Numerics;
 using System.Text.Json;
@@ -77,14 +77,9 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
         return result;
     }
 
-    public virtual async Task<Vector2> GetViewportAsync(CancellationToken token = default)
+    public virtual Task<Vector2> GetViewportAsync(CancellationToken token = default)
     {
-        const string script = JsMethods.WindowSizeAsJsonObject;
-
-        var json = await EvaluateExpressionAsync(script, token);
-        var result = JsonSerializer.Deserialize(json.ToString()!, JsJsonContext.Default.JsViewport);
-
-        return new Vector2(result.Width, result.Height);
+        return BrowserUtils.GetViewportAsync(this, token);
     }
 
     public virtual Task<Vector2> GetScrollAsync(CancellationToken token = default)

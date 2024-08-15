@@ -70,7 +70,8 @@ public class CursorTests
         await browserFetcher.DownloadAsync();
         await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
         {
-            Headless = true
+            Headless = true,
+            DefaultViewport = null
         });
 
         await using var page = await browser.NewPageAsync();
