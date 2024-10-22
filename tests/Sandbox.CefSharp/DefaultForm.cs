@@ -47,7 +47,7 @@ public class DefaultForm : Form
                     await cursor.ClickAsync(ElementSelector.FromCss("#checkbox-b"), token: token);
 
                     await cursor.ClickAsync(ElementSelector.FromCss("#input-a"), token: token);
-                    await cursor.TypeAsync("Input A", token: token);
+                    await cursor.TypeAsync("Input A!!!", token: token);
 
                     await cursor.ClickAsync(ElementSelector.FromCss("#input-d"), token: token);
                     await cursor.TypeAsync("Input D", token: token);

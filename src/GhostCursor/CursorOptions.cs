@@ -16,4 +16,9 @@ public class CursorOptions
     /// Default amount of steps to use for cursor movement.
     /// </summary>
     public int DefaultSteps { get; set; } = 100;
+
+    /// <summary>
+    /// Movement algorithm to use for cursor movement.
+    /// </summary>
+    public ICursorMovement Movement { get; set; } = BezierCursorMovement.Instance;
 }

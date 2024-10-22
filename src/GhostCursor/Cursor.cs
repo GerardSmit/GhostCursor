@@ -112,7 +112,6 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
         relativeBoundingBox = await ToRelativeBoundingBox(boundingBox, type, token);
 
         var end = await GetRandomPointAsync(relativeBoundingBox);
-        var bezier = VectorUtils.BezierCurve(_random, _cursor, end);
         var moveTime = moveSpeed ?? GetMoveSpeed(_cursor, end);
         var delay = TimeSpan.FromMilliseconds(moveTime.TotalMilliseconds / steps.Value);
 
@@ -141,14 +140,13 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
 
         var currentDelay = TimeSpan.Zero;
 
-        for (var i = 0; i < steps.Value; i++)
+        foreach (var point in _options.Movement.MoveTo(_random, _cursor, end, steps.Value))
         {
             if (token.IsCancellationRequested)
             {
                 break;
             }
 
-            var point = bezier.Position(i / (float)steps);
             _cursor = point;
             await _browser.MoveCursorToAsync(point, token);
 

@@ -133,6 +133,13 @@
             line-height: 1.4;
             font-size: 16px;
         }
+
+        .events {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -160,5 +167,32 @@
 <input type="text" id="input-d">
 <div class="margin-bottom-500"></div>
 <input type="text" id="input-e">
+
+<div class="events"></div>
+
+<script>
+    function addEvent(eventName) {
+        const events = document.querySelector('.events');
+        const event = document.createElement('div');
+        event.innerText = eventName;
+        events.appendChild(event);
+
+        setTimeout(function () {
+            events.removeChild(event);
+        }, 1000);
+    }
+
+    document.addEventListener('keydown', function (e) {
+        addEvent('keydown: ' + e.key);
+    });
+
+    document.addEventListener('keyup', function (e) {
+        addEvent('keyup: ' + e.key);
+    });
+
+    document.addEventListener('keypress', function (e) {
+        addEvent('keypress: ' + e.key);
+    });
+</script>
 </body>
 </html>
