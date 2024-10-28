@@ -25,7 +25,7 @@ public interface IBrowser
 
     Task AllowInputAsync(bool allow, CancellationToken token = default);
 
-    Task TypeAsync(Random random, string text, CancellationToken token = default);
+    Task TypeAsync(Random random, string text, int typoPercentage = 0, CancellationToken token = default);
 }
 
 public interface IBrowser<TElement> : IBrowser

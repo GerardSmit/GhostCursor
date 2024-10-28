@@ -151,7 +151,7 @@ public class SeleniumBrowser(IWebDriver driver) : IBrowser<IWebElement>
         return Task.CompletedTask;
     }
 
-    public Task TypeAsync(Random random, string text, CancellationToken token = default)
+    public Task TypeAsync(Random random, string text, int typoPercentage = 0, CancellationToken token = default)
     {
         new Actions(driver, TimeSpan.Zero)
             .SendKeys(text)

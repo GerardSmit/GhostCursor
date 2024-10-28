@@ -1,7 +1,7 @@
 <Project>
 
     <PropertyGroup>
-        <Version>0.3.0-alpha.3</Version>
+        <Version>0.3.0-alpha.4</Version>
         <PackageVersion>$(Version)</PackageVersion>
         <Authors>GhostCursor</Authors>
         <RepositoryUrl>https://github.com/GerardSmit/GhostCursor</RepositoryUrl>

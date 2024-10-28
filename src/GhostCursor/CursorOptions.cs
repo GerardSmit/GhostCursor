@@ -21,4 +21,12 @@ public class CursorOptions
     /// Movement algorithm to use for cursor movement.
     /// </summary>
     public ICursorMovement Movement { get; set; } = BezierCursorMovement.Instance;
+
+    /// <summary>
+    /// Percentage of the time to introduce a typo in the text.
+    /// </summary>
+    /// <remarks>
+    /// This is only supported by CEFSharp.
+    /// </remarks>
+    public int TypoPercentage { get; set; } = 5;
 }

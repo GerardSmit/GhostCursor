@@ -14,7 +14,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CefSharp.WinForms.NETCore" Version="120.2.50" />
+        <PackageReference Include="CefSharp.WinForms.NETCore" Version="129.0.110" />
         <PackageReference Include="HttpStack.CefSharp" Version="0.0.1-alpha.17" />
         <PackageReference Include="HttpStack.StaticFiles" Version="0.0.1-alpha.17" />
         <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.4" />

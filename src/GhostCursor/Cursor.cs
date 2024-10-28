@@ -251,7 +251,7 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
     {
         ValidateStarted();
 
-        await _browser.TypeAsync(_random, input, token);
+        await _browser.TypeAsync(_random, input, _options.TypoPercentage, token);
         await Task.Delay(_random.Next(200, 250), token);
     }
 

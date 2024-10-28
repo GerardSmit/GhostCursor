@@ -106,7 +106,7 @@ public abstract class BrowserBase<TElement> : IBrowser<TElement>
 
     public abstract Task AllowInputAsync(bool allow, CancellationToken token = default);
 
-    public abstract Task TypeAsync(Random random, string text, CancellationToken token = default);
+    public abstract Task TypeAsync(Random random, string text, int typoPercentage = 0, CancellationToken token = default);
 
     public virtual async Task<TElement> GetClickableElementAsync(TElement element, CancellationToken token = default)
     {

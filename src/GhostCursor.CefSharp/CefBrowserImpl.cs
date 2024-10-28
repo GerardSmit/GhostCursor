@@ -42,7 +42,7 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase
         host.SendMouseClickEvent((int)point.X, (int)point.Y, MouseButtonType.Left, true, 1, CefEventFlags.None);
     }
 
-    public override async Task TypeAsync(Random random, string text, CancellationToken token = default)
+    public override async Task TypeAsync(Random random, string text, int typoPercentage = 0, CancellationToken token = default)
     {
         var host = browser.GetBrowser().GetHost();
 
@@ -59,7 +59,9 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase
                 break;
             }
 
-            if (!didTypo && random.Next(0, 100) < 8 && TypoCharacters.TryGetValue(char.ToLower(c), out var typos))
+            if (!didTypo &&
+                typoPercentage > 0 && random.Next(0, 100) < typoPercentage &&
+                TypoCharacters.TryGetValue(char.ToLower(c), out var typos))
             {
                 didTypo = true;
 
@@ -96,30 +98,33 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase
 
     private static async Task Type(Random random, IBrowserHost host, char c, CancellationToken token = default)
     {
-        var shiftDown = IsShift(c);
+        var (shiftDown, keyCode) = GetWindowsKeyCode(c);
 
-        if (shiftDown)
+        if (keyCode.HasValue)
         {
+            if (shiftDown)
+            {
+                host.SendKeyEvent(new KeyEvent
+                {
+                    Type = KeyEventType.KeyDown,
+                    Modifiers = CefEventFlags.ShiftDown,
+                    WindowsKeyCode = 0x10,
+                    FocusOnEditableField = true,
+                    IsSystemKey = false,
+                });
+
+                await Task.Delay(random.Next(10, 40), token);
+            }
+
             host.SendKeyEvent(new KeyEvent
             {
                 Type = KeyEventType.KeyDown,
-                Modifiers = CefEventFlags.ShiftDown,
-                WindowsKeyCode = 0x10,
+                Modifiers = shiftDown ? CefEventFlags.ShiftDown : CefEventFlags.None,
+                WindowsKeyCode = keyCode.Value,
                 FocusOnEditableField = true,
                 IsSystemKey = false,
             });
-
-            await Task.Delay(random.Next(10, 40), token);
         }
-
-        host.SendKeyEvent(new KeyEvent
-        {
-            Type = KeyEventType.KeyDown,
-            Modifiers = shiftDown ? CefEventFlags.ShiftDown : CefEventFlags.None,
-            WindowsKeyCode = char.ToUpper(c),
-            FocusOnEditableField = true,
-            IsSystemKey = false,
-        });
 
         host.SendKeyEvent(new KeyEvent
         {
@@ -132,35 +137,88 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase
 
         await Task.Delay(random.Next(10, 40), token);
 
-        if (shiftDown)
+        if (keyCode.HasValue)
         {
+            if (shiftDown)
+            {
+                host.SendKeyEvent(new KeyEvent
+                {
+                    Type = KeyEventType.KeyUp,
+                    Modifiers = CefEventFlags.ShiftDown,
+                    WindowsKeyCode = 0x10,
+                    FocusOnEditableField = true,
+                    IsSystemKey = false,
+                });
+
+                await Task.Delay(random.Next(10, 40), token);
+            }
+
             host.SendKeyEvent(new KeyEvent
             {
                 Type = KeyEventType.KeyUp,
-                Modifiers = CefEventFlags.ShiftDown,
-                WindowsKeyCode = 0x10,
+                Modifiers = CefEventFlags.None,
+                WindowsKeyCode = keyCode.Value,
                 FocusOnEditableField = true,
                 IsSystemKey = false,
             });
-
-            await Task.Delay(random.Next(10, 40), token);
         }
-
-        host.SendKeyEvent(new KeyEvent
-        {
-            Type = KeyEventType.KeyUp,
-            Modifiers = CefEventFlags.None,
-            WindowsKeyCode = char.ToUpper(c),
-            FocusOnEditableField = true,
-            IsSystemKey = false,
-        });
 
         await Task.Delay(c == ' ' ? random.Next(100, 400) : random.Next(20, 60), token);
     }
 
-    private static bool IsShift(char c)
+    private static (bool shiftDown, int? keyCode) GetWindowsKeyCode(char c)
     {
-        return char.IsUpper(c);
+        // Convert the char to System.Windows.Forms.Keys
+        return c switch
+        {
+            // Letters
+            >= 'a' and <= 'z' => (false, char.ToUpper(c)),
+            >= 'A' and <= 'Z' => (true, c),
+
+            // Numbers
+            >= '0' and <= '9' => (false, c),
+
+            // Space
+            ' ' => (false, 0x20),
+
+            // Number keys with Shift (symbols)
+            '!' => (true, '1'),
+            '@' => (true, '2'),
+            '#' => (true, '3'),
+            '$' => (true, '4'),
+            '%' => (true, '5'),
+            '^' => (true, '6'),
+            '&' => (true, '7'),
+            '*' => (true, '8'),
+            '(' => (true, '9'),
+            ')' => (true, '0'),
+
+            // Symbols on main keyboard
+            '-' => (false, 0xBD), // Keys.OemMinus
+            '_' => (true, 0xBD),
+            '=' => (false, 0xBB), // Keys.Oemplus
+            '+' => (true, 0xBB),
+            '[' => (false, 0xDB), // Keys.OemOpenBrackets
+            '{' => (true, 0xDB),
+            ']' => (false, 0xDD), // Keys.OemCloseBrackets
+            '}' => (true, 0xDD),
+            '\\' => (false, 0xDC), // Keys.OemPipe
+            '|' => (true, 0xDC),
+            ';' => (false, 0xBA), // Keys.OemSemicolon
+            ':' => (true, 0xBA),
+            '\'' => (false, 0xDE), // Keys.OemQuotes
+            '"' => (true, 0xDE),
+            ',' => (false, 0xBC), // Keys.OemComma
+            '<' => (true, 0xBC),
+            '.' => (false, 0xBE), // Keys.OemPeriod
+            '>' => (true, 0xBE),
+            '/' => (false, 0xBF), // Keys.OemQuestion
+            '?' => (true, 0xBF),
+            '`' => (false, 0xC0), // Keys.Oemtilde
+            '~' => (true, 0xC0),
+
+            _ => (false, null),
+        };
     }
 
     private static async Task Backspace(Random random, IBrowserHost host, CancellationToken token = default)

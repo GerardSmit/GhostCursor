@@ -112,7 +112,7 @@ public abstract class PuppeteerBrowserBase : IBrowser<IElementHandle>
         });
     }
 
-    public Task TypeAsync(Random random, string text, CancellationToken token = default)
+    public Task TypeAsync(Random random, string text, int typoPercentage = 0, CancellationToken token = default)
     {
         return Page.Keyboard.TypeAsync(text);
     }
