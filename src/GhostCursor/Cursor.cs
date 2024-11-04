@@ -138,49 +138,59 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
                   """, token);
         }
 
-        var currentDelay = TimeSpan.Zero;
-
-        foreach (var point in _options.Movement.MoveTo(_random, _cursor, end, steps.Value))
+        try
         {
-            if (token.IsCancellationRequested)
+            var currentDelay = TimeSpan.Zero;
+
+            foreach (var point in _options.Movement.MoveTo(_random, _cursor, end, steps.Value))
             {
-                break;
+                if (token.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                _cursor = point;
+                await _browser.MoveCursorToAsync(point, token);
+
+                currentDelay = currentDelay.Add(delay);
+
+                if (currentDelay.TotalMilliseconds > 5)
+                {
+                    await Task.Delay(currentDelay, token);
+                    currentDelay = TimeSpan.Zero;
+                }
+
+                if (_options.Debug)
+                {
+                    await _browser.EvaluateExpressionAsync(
+                        $$"""
+                          (function() {
+                              window.debugPoint.style.left = '{{(int)point.X}}px';
+                              window.debugPoint.style.top = '{{(int)point.Y}}px';
+                          })();
+                          """, token);
+                }
             }
 
-            _cursor = point;
-            await _browser.MoveCursorToAsync(point, token);
-
-            currentDelay = currentDelay.Add(delay);
-
-            if (currentDelay.TotalMilliseconds > 5)
-            {
-                await Task.Delay(currentDelay, token);
-                currentDelay = TimeSpan.Zero;
-            }
-
+            await _browser.MoveCursorToAsync(end, token);
+        }
+        finally
+        {
             if (_options.Debug)
             {
                 await _browser.EvaluateExpressionAsync(
                     $$"""
                       (function() {
-                          window.debugPoint.style.left = '{{(int)point.X}}px';
-                          window.debugPoint.style.top = '{{(int)point.Y}}px';
+                          window.debugPoint.style.left = '{{(int)end.X}}px';
+                          window.debugPoint.style.top = '{{(int)end.Y}}px';
                       })();
-                      """, token);
+                      """, CancellationToken.None);
             }
         }
 
-        await _browser.MoveCursorToAsync(end, token);
-
-        if (_options.Debug)
+        if (token.IsCancellationRequested)
         {
-            await _browser.EvaluateExpressionAsync(
-                $$"""
-                  (function() {
-                      window.debugPoint.style.left = '{{(int)end.X}}px';
-                      window.debugPoint.style.top = '{{(int)end.Y}}px';
-                  })();
-                  """, token);
+            return _cursor;
         }
 
         await Task.Delay(_random.Next(200, 250), token);

@@ -46,7 +46,7 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase
     {
         var host = browser.GetBrowser().GetHost();
 
-        await Task.Delay(random.Next(100, 500), token);
+        await Task.Delay(random.Next(100, 200), token);
 
         var didTypo = false;
 
@@ -82,7 +82,7 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase
                     await Type(random, host, text[index + i], token);
                 }
 
-                await Task.Delay(random.Next(100, 500), token);
+                await Task.Delay(random.Next(100, 200), token);
 
                 for (var i = 0; i < extraCount + 1; i++)
                 {
@@ -93,7 +93,7 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase
             await Type(random, host, c, token);
         }
 
-        await Task.Delay(random.Next(100, 500), token);
+        await Task.Delay(random.Next(100, 200), token);
     }
 
     private static async Task Type(Random random, IBrowserHost host, char c, CancellationToken token = default)
@@ -163,7 +163,7 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase
             });
         }
 
-        await Task.Delay(c == ' ' ? random.Next(100, 400) : random.Next(20, 60), token);
+        await Task.Delay(c == ' ' ? random.Next(50, 100) : random.Next(10, 30), token);
     }
 
     private static (bool shiftDown, int? keyCode) GetWindowsKeyCode(char c)
@@ -243,7 +243,7 @@ public abstract class CefBrowserImpl(IWebBrowser browser) : BrowserBase
             IsSystemKey = false,
         });
 
-        await Task.Delay(random.Next(20, 60), token);
+        await Task.Delay(random.Next(10, 40), token);
     }
 
     private static readonly Dictionary<char, char[]> TypoCharacters = new()
