@@ -47,7 +47,7 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
 
         _isStarted = false;
         var end = await _browser.GetCursorAsync(token);
-        await MoveToAsync(end, token: token);
+        await MoveToAsync(end, type: PositionType.Relative, token: token);
         await _browser.AllowInputAsync(true, token);
     }
 
@@ -173,9 +173,7 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
             }
 
             await _browser.MoveCursorToAsync(end, token);
-        }
-        finally
-        {
+
             if (_options.Debug)
             {
                 await _browser.EvaluateExpressionAsync(
@@ -186,27 +184,24 @@ public class Cursor<TBrowser, TElement> : ICursor<TElement>
                       })();
                       """, CancellationToken.None);
             }
-        }
 
-        if (token.IsCancellationRequested)
+            await Task.Delay(_random.Next(200, 250), token);
+        }
+        finally
         {
-            return _cursor;
+            if (_options.Debug)
+            {
+                await _browser.EvaluateExpressionAsync(
+                    """
+                    (function() {
+                        window.debugPoint.remove();
+                        delete window.debugPoint;
+                    })();
+                    """, token);
+            }
         }
 
-        await Task.Delay(_random.Next(200, 250), token);
-
-        if (_options.Debug)
-        {
-            await _browser.EvaluateExpressionAsync(
-                """
-                (function() {
-                    window.debugPoint.remove();
-                    delete window.debugPoint;
-                })();
-                """, token);
-        }
-
-        return end;
+        return token.IsCancellationRequested ? _cursor : end;
     }
 
     private async Task<BoundingBox> ToRelativeBoundingBox(BoundingBox boundingBox, PositionType type, CancellationToken token)
